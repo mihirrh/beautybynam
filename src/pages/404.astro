@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Page not found | Beauty by Nam" description="The page you were looking for could not be found." noindex>
+  <section class="wrap grid min-h-[70svh] place-items-center pb-24 pt-40 text-center">
+    <div class="max-w-xl">
+      <p class="eyebrow">404</p>
+      <h1 class="h1 mt-5">This page has wandered off</h1>
+      <p class="mt-6 text-muted">The link may be out of date. You can head back to the homepage or see recent work in the portfolio.</p>
+      <div class="mt-10 flex flex-col items-center justify-center gap-6 sm:flex-row">
+        <a href="/" class="btn btn-primary">Back to home</a>
+        <a href="/portfolio" class="link-quiet">View the portfolio<span class="arrow" aria-hidden="true"></span></a>
+      </div>
+    </div>
+  </section>
+</Base>

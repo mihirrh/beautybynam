@@ -1,0 +1,30 @@
+{
+  "eyebrow": "About",
+  "heading": "Hello, I'm Nam",
+  "intro": "I'm a hair and makeup artist based in Leicester, and I look after brides on the mornings that matter most to them.",
+  "portrait": "/src/assets/media/about/nam-portrait.jpg",
+  "portraitAlt": "Portrait of Nam, bridal hair and makeup artist in Leicester",
+  "story": "Beauty by Nam began with a simple belief: a bride should look in the mirror and see herself, only calmer, brighter and ready.\n\nThat shapes how I work. I listen first. We talk about your dress, your venue, the photographs you love and the things you would rather avoid. Only then do I pick up a brush.\n\nI work with brides across Leicester and Leicestershire, and travel further for weddings elsewhere in the UK and abroad.",
+  "philosophyHeading": "My approach to bridal beauty",
+  "philosophy": "I believe in skin that looks like skin, defined features that suit your face and hair that is made to last the whole day, not just the first hour.\n\nNo two brides are the same, so there is no single signature look. The look is yours; my job is to make it feel effortless and keep it that way until the last dance.",
+  "workingImage": "/src/assets/media/about/working-detail.jpg",
+  "workingImageAlt": "Close detail of bridal makeup being applied",
+  "experienceHeading": "What it is like to book with me",
+  "experienceSteps": [
+    {
+      "title": "We talk it through",
+      "text": "You send your enquiry, and I reply personally to talk about your date, your venue and the look you have in mind."
+    },
+    {
+      "title": "You receive a clear quote",
+      "text": "Your quote lists exactly what is included, with any travel costs shown separately, so there are no surprises."
+    },
+    {
+      "title": "I take care of the morning",
+      "text": "On the day I arrive on time, keep the atmosphere calm and make sure you leave for the ceremony feeling like yourself."
+    }
+  ],
+  "background": "",
+  "backgroundHeading": "Training and experience",
+  "closingLine": "I would love to hear about your wedding."
+}

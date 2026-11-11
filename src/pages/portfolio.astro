@@ -1,0 +1,361 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { gallery, categories } from '../lib/site';
+import { media } from '../lib/media';
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Portfolio', path: '/portfolio' },
+];
+
+// The anchor points at a large WebP so the lightbox works, and the image is
+// still reachable, even if JavaScript fails.
+const items = await Promise.all(
+  gallery.items.map(async (item, index) => {
+    const src = media(item.image);
+    const full = await getImage({ src, width: Math.min(2000, src.width), format: 'webp', quality: 82 });
+    return { ...item, index, src, full: full.src, w: full.options.width as number, h: full.options.height as number };
+  }),
+);
+
+// Only show filters for categories that actually have work in them.
+const used = categories.filter((c) => items.some((i) => i.category === c.value));
+---
+
+<Base page="portfolio" breadcrumbs={trail} image={items[0]?.image}>
+  <PageHeader eyebrow="Portfolio" title={gallery.heading} intro={gallery.intro} trail={trail} />
+
+  <section class="pb-24 md:pb-36" aria-label="Portfolio gallery">
+    <div class="wrap">
+      {
+        used.length > 1 && (
+          <div class="mb-12 flex flex-wrap gap-x-8 gap-y-3 border-b border-line pb-5" role="group" aria-label="Filter by category" data-filters>
+            <button type="button" class="filter" data-filter="all" aria-pressed="true">All</button>
+            {used.map((c) => (
+              <button type="button" class="filter" data-filter={c.value} aria-pressed="false">{c.label}</button>
+            ))}
+          </div>
+        )
+      }
+      <p class="sr-only" role="status" aria-live="polite" data-filter-status></p>
+
+      <ul class="gallery-columns" data-gallery>
+        {
+          items.map((item, position) => (
+            <li class="gallery-item" data-category={item.category} data-index={item.index}>
+              <a
+                href={item.full}
+                class="group block"
+                data-lightbox
+                data-w={item.w}
+                data-h={item.h}
+                data-alt={item.alt}
+                data-caption={item.caption}
+                aria-label={`View full screen: ${item.caption}`}
+              >
+                <Photo
+                  src={item.src}
+                  alt={item.alt}
+                  ratio={`${item.src.width} / ${item.src.height}`}
+                  zoom
+                  priority={position < 3}
+                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 100vw"
+                  widths={[400, 640, 900, 1200]}
+                />
+                <span class="mt-3 block text-sm tracking-wide text-muted transition-colors group-hover:text-champagne">{item.caption}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Lightbox: native dialog gives focus trapping, Esc and top-layer rendering. -->
+  <dialog class="lightbox" aria-label="Portfolio image viewer" data-dialog>
+    <div class="lightbox-bar">
+      <p class="text-xs tracking-[0.25em] uppercase text-antique" aria-live="polite" data-counter></p>
+      <button type="button" class="lightbox-btn" data-close aria-label="Close image viewer">
+        <span aria-hidden="true">Close</span>
+      </button>
+    </div>
+    <button type="button" class="lightbox-nav lightbox-prev" data-prev aria-label="Previous image"><span aria-hidden="true"></span></button>
+    <figure class="lightbox-figure">
+      <img alt="" data-img decoding="async" />
+      <figcaption class="lightbox-caption" data-caption></figcaption>
+    </figure>
+    <button type="button" class="lightbox-nav lightbox-next" data-next aria-label="Next image"><span aria-hidden="true"></span></button>
+  </dialog>
+
+  <ClosingCta />
+</Base>
+
+<style is:global>
+  .gallery-columns {
+    columns: 1;
+    column-gap: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .gallery-columns {
+      columns: 2;
+      column-gap: 1.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .gallery-columns {
+      columns: 3;
+      column-gap: 2rem;
+    }
+  }
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: 2.25rem;
+  }
+  /* Break the grid rhythm slightly so it reads as an editorial layout. */
+  @media (min-width: 1024px) {
+    .gallery-item:nth-child(3n + 2) {
+      padding-top: 3rem;
+    }
+  }
+  .gallery-item[hidden] {
+    display: none;
+  }
+  .filter {
+    font-size: 0.74rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    padding: 0.4rem 0;
+    border-bottom: 1px solid transparent;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .filter:hover {
+    color: var(--color-champagne);
+  }
+  .filter[aria-pressed='true'] {
+    color: var(--color-champagne);
+    border-color: var(--color-antique);
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgb(5 5 5 / 0.97);
+    color: var(--color-cream);
+  }
+  .lightbox:not([open]) {
+    display: none;
+  }
+  .lightbox[open] {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-items: center;
+  }
+  .lightbox::backdrop {
+    background: #050505;
+  }
+  .lightbox-bar {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem var(--gutter);
+  }
+  .lightbox-btn {
+    font-size: 0.74rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-champagne);
+    padding: 0.75rem 0.25rem;
+    min-height: 2.75rem;
+  }
+  .lightbox-figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    height: 100%;
+    padding-bottom: 1.25rem;
+  }
+  .lightbox-figure img {
+    max-width: 100%;
+    max-height: calc(100% - 3rem);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+  .lightbox-caption {
+    margin-top: 1rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-champagne);
+    text-align: center;
+    padding-inline: 1rem;
+  }
+  .lightbox-nav {
+    width: 3.25rem;
+    height: 3.25rem;
+    display: grid;
+    place-items: center;
+    margin-inline: 0.5rem;
+  }
+  .lightbox-nav span {
+    display: block;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-top: 1px solid var(--color-champagne);
+    border-left: 1px solid var(--color-champagne);
+  }
+  .lightbox-prev span {
+    transform: rotate(-45deg);
+  }
+  .lightbox-next span {
+    transform: rotate(135deg);
+  }
+  @media (max-width: 640px) {
+    .lightbox[open] {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+    .lightbox-nav {
+      position: absolute;
+      bottom: 1rem;
+    }
+    .lightbox-prev {
+      left: 1rem;
+    }
+    .lightbox-next {
+      right: 1rem;
+    }
+    .lightbox-figure {
+      padding-bottom: 5rem;
+    }
+  }
+</style>
+
+<script>
+  import { animate } from 'motion';
+
+  const root = document.documentElement;
+  const motionOk = root.classList.contains('motion-ok');
+  const ease = [0.22, 0.7, 0.2, 1] as const;
+
+  /* ------------------------------------------------------------ filtering */
+  const filters = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const cells = Array.from(document.querySelectorAll<HTMLElement>('.gallery-item'));
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+
+  filters.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const value = btn.dataset.filter!;
+      filters.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      let shown = 0;
+      cells.forEach((cell) => {
+        const show = value === 'all' || cell.dataset.category === value;
+        cell.hidden = !show;
+        if (show) {
+          shown++;
+          if (motionOk) animate(cell, { opacity: [0, 1] }, { duration: 0.5, ease });
+        }
+      });
+      if (status) status.textContent = `Showing ${shown} ${shown === 1 ? 'image' : 'images'}`;
+    }),
+  );
+
+  /* ------------------------------------------------------------- lightbox */
+  const dialog = document.querySelector<HTMLDialogElement>('[data-dialog]')!;
+  const img = dialog.querySelector<HTMLImageElement>('[data-img]')!;
+  const caption = dialog.querySelector<HTMLElement>('[data-caption]')!;
+  const counter = dialog.querySelector<HTMLElement>('[data-counter]')!;
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-lightbox]'));
+
+  let opener: HTMLElement | null = null;
+  let current = 0;
+
+  /** Indexes of links currently visible (respecting the active filter). */
+  const visible = () => links.map((_, i) => i).filter((i) => !links[i].closest<HTMLElement>('.gallery-item')!.hidden);
+
+  const show = (index: number, direction = 0) => {
+    const link = links[index];
+    current = index;
+    const list = visible();
+    counter.textContent = `${list.indexOf(index) + 1} / ${list.length}`;
+    caption.textContent = link.dataset.caption ?? '';
+    const swap = () => {
+      img.src = link.href;
+      img.alt = link.dataset.alt ?? '';
+      img.width = Number(link.dataset.w);
+      img.height = Number(link.dataset.h);
+      if (motionOk) animate(img, { opacity: [0, 1], x: [direction * 24, 0] }, { duration: 0.55, ease });
+    };
+    swap();
+    history.replaceState(null, '', `#photo-${index}`);
+  };
+
+  const step = (delta: number) => {
+    const list = visible();
+    const pos = list.indexOf(current);
+    show(list[(pos + delta + list.length) % list.length], delta);
+  };
+
+  const open = (index: number, from?: HTMLElement) => {
+    opener = from ?? null;
+    if (!dialog.open) {
+      dialog.showModal();
+      root.style.overflow = 'hidden';
+      if (motionOk) animate(dialog, { opacity: [0, 1] }, { duration: 0.35, ease });
+    }
+    show(index);
+  };
+
+  links.forEach((link, i) =>
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      open(i, link);
+    }),
+  );
+
+  dialog.querySelector('[data-close]')!.addEventListener('click', () => dialog.close());
+  dialog.querySelector('[data-prev]')!.addEventListener('click', () => step(-1));
+  dialog.querySelector('[data-next]')!.addEventListener('click', () => step(1));
+  dialog.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+  });
+  dialog.addEventListener('click', (e) => {
+    // Click on the dark area (not the image or controls) closes.
+    if (e.target === dialog || (e.target as HTMLElement).classList.contains('lightbox-figure')) dialog.close();
+  });
+  dialog.addEventListener('close', () => {
+    root.style.overflow = '';
+    history.replaceState(null, '', location.pathname + location.search);
+    opener?.focus();
+  });
+
+  // Touch: horizontal swipe to move between images.
+  let startX = 0;
+  dialog.addEventListener('touchstart', (e) => (startX = e.changedTouches[0].clientX), { passive: true });
+  dialog.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 60) step(dx < 0 ? 1 : -1);
+  });
+
+  // Deep link, e.g. /portfolio#photo-3 from the homepage.
+  const match = location.hash.match(/^#photo-(\d+)$/);
+  if (match && links[Number(match[1])]) open(Number(match[1]));
+</script>

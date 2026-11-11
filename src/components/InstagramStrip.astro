@@ -1,0 +1,50 @@
+---
+import { instagram, home, settings } from '../lib/site';
+import { media } from '../lib/media';
+import Photo from './Photo.astro';
+
+const c = home.instagram;
+---
+
+<section class="section" aria-labelledby="insta-heading">
+  <div class="wrap">
+    <div class="grid items-end gap-8 md:grid-cols-12">
+      <div class="md:col-span-7" data-stagger>
+        <p class="eyebrow" data-reveal>{c.eyebrow}</p>
+        <h2 id="insta-heading" class="h2 mt-4" data-reveal>{c.heading}</h2>
+      </div>
+      <div class="md:col-span-5" data-reveal>
+        <p class="text-muted">{c.text}</p>
+      </div>
+    </div>
+
+    <ul class="mt-12 grid grid-cols-2 gap-2 sm:grid-cols-3 md:gap-3 lg:grid-cols-6">
+      {instagram.items.map((post) => {
+        const href = post.link || settings.instagramUrl;
+        return (
+          <li>
+            <a href={href} target="_blank" rel="noopener noreferrer" class="block">
+              <Photo
+                src={media(post.image)}
+                alt={post.alt}
+                ratio="1 / 1"
+                zoom
+                widths={[320, 480, 640]}
+                sizes="(min-width: 1024px) 15vw, (min-width: 640px) 30vw, 46vw"
+              />
+              <span class="sr-only">View on Instagram (opens in a new tab)</span>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+
+    <div class="mt-12 flex flex-col items-center gap-4 text-center">
+      <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" class="btn">
+        {c.buttonLabel}<span class="arrow" aria-hidden="true"></span>
+        <span class="sr-only">(opens in a new tab)</span>
+      </a>
+      <p class="text-xs text-muted">A hand-picked selection, not a live feed. Updated by Nam.</p>
+    </div>
+  </div>
+</section>

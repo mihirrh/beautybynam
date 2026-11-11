@@ -1,0 +1,434 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { quote, settings, has } from '../../lib/site';
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+
+// Only values that exist are placed on the PDF. Nothing is invented.
+const config = {
+  aboutText: quote.aboutText,
+  thankYou: quote.thankYou,
+  validityDays: quote.validityDays,
+  paymentInstructions: quote.paymentInstructions,
+  keyTerms: quote.keyTerms,
+  businessName: settings.businessName,
+  contactLines: [
+    has(settings.email) ? settings.email : '',
+    has(settings.phone) ? settings.phone : '',
+    `Instagram @${settings.instagramHandle}`,
+  ].filter(Boolean),
+  termsUrl: new URL('/terms', Astro.site).toString().replace(/^https?:\/\//, ''),
+  suggestions: services.map((s) => s.data.title),
+};
+---
+
+<Base title="Quote builder | Beauty by Nam" description="Private quotation builder." noindex>
+  <div class="wrap pb-24 pt-32 md:pt-40">
+    <p class="eyebrow">Private</p>
+    <h1 class="h1 mt-4">Quote builder</h1>
+    <p class="lede mt-5">
+      Create a branded PDF quotation for a client. Everything is generated in this browser: client details are not sent
+      anywhere. A draft is kept on this device only.
+    </p>
+
+    <div class="mt-14 grid gap-14 lg:grid-cols-12 lg:gap-10">
+      <form id="quote-form" class="grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:col-span-8" novalidate>
+        <h2 class="eyebrow sm:col-span-2">Quote</h2>
+        <div class="field">
+          <label for="reference">Reference</label>
+          <input class="input" id="reference" name="reference" type="text" maxlength="40" required />
+        </div>
+        <div class="field">
+          <label for="issueDate">Issue date</label>
+          <input class="input" id="issueDate" name="issueDate" type="date" required />
+        </div>
+        <div class="field">
+          <label for="validDays">Valid for (days)</label>
+          <input class="input" id="validDays" name="validDays" type="number" min="0" max="365" inputmode="numeric" />
+        </div>
+
+        <h2 class="eyebrow mt-4 sm:col-span-2">Client</h2>
+        <div class="field">
+          <label for="customerName">Name <span aria-hidden="true">*</span></label>
+          <input class="input" id="customerName" name="customerName" type="text" maxlength="120" autocomplete="off" required />
+        </div>
+        <div class="field">
+          <label for="customerEmail">Email</label>
+          <input class="input" id="customerEmail" name="customerEmail" type="email" maxlength="200" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="customerPhone">Phone</label>
+          <input class="input" id="customerPhone" name="customerPhone" type="tel" maxlength="30" autocomplete="off" />
+        </div>
+
+        <h2 class="eyebrow mt-4 sm:col-span-2">Event</h2>
+        <div class="field">
+          <label for="eventDate">Date</label>
+          <input class="input" id="eventDate" name="eventDate" type="date" />
+        </div>
+        <div class="field">
+          <label for="eventTime">Start time</label>
+          <input class="input" id="eventTime" name="eventTime" type="time" />
+        </div>
+        <div class="field">
+          <label for="eventVenue">Venue / location</label>
+          <input class="input" id="eventVenue" name="eventVenue" type="text" maxlength="200" />
+        </div>
+        <div class="field">
+          <label for="eventPeople">Number of people</label>
+          <input class="input" id="eventPeople" name="eventPeople" type="number" min="1" max="50" inputmode="numeric" />
+        </div>
+
+        <fieldset class="sm:col-span-2">
+          <legend class="eyebrow mt-4">Services and prices</legend>
+          <div class="mt-5 hidden gap-3 text-[0.7rem] uppercase tracking-[0.18em] text-champagne md:grid md:grid-cols-[1fr_5rem_7rem_2.75rem]" aria-hidden="true">
+            <span>Description</span><span>Qty</span><span>Price (£)</span><span></span>
+          </div>
+          <ul id="items" class="mt-3 space-y-4"></ul>
+          <datalist id="service-suggestions">
+            {config.suggestions.map((s) => <option value={s} />)}
+          </datalist>
+          <button type="button" class="link-quiet mt-6" id="add-item">Add a line</button>
+        </fieldset>
+
+        <div class="field">
+          <label for="travelLabel">Travel description</label>
+          <input class="input" id="travelLabel" name="travelLabel" type="text" maxlength="120" value="Travel" aria-describedby="travel-hint" />
+          <span class="hint" id="travel-hint">Shown as its own line. Travel is charged in addition.</span>
+        </div>
+        <div class="field">
+          <label for="travelAmount">Travel cost (£)</label>
+          <input class="input" id="travelAmount" name="travelAmount" type="text" inputmode="decimal" placeholder="0.00" />
+        </div>
+
+        <h2 class="eyebrow mt-4 sm:col-span-2">VAT and deposit</h2>
+        <div class="field sm:col-span-2">
+          <label class="check !w-fit !gap-4" for="vat">
+            <input id="vat" name="vat" type="checkbox" role="switch" />
+            <span>Add VAT at 20%</span>
+          </label>
+        </div>
+        <div class="field" id="vat-number-field" hidden>
+          <label for="vatNumber">VAT registration number</label>
+          <input class="input" id="vatNumber" name="vatNumber" type="text" maxlength="20" autocomplete="off" />
+          <span class="hint">Optional. Only enter this if you are VAT registered.</span>
+        </div>
+        <div class="field">
+          <label for="deposit">Deposit requested (£)</label>
+          <input class="input" id="deposit" name="deposit" type="text" inputmode="decimal" placeholder="0.00" />
+        </div>
+
+        <h2 class="eyebrow mt-4 sm:col-span-2">Wording</h2>
+        <div class="field sm:col-span-2">
+          <label for="notes">Notes for the client</label>
+          <textarea class="input" id="notes" name="notes" maxlength="1500"></textarea>
+        </div>
+        <div class="field sm:col-span-2">
+          <label for="payment">Payment instructions</label>
+          <textarea class="input" id="payment" name="payment" maxlength="1500" aria-describedby="payment-hint"></textarea>
+          <span class="hint" id="payment-hint">Add your bank details here when you have decided how to share them. Default text lives in the CMS under “Quote PDF”.</span>
+        </div>
+        <div class="field sm:col-span-2">
+          <label for="terms">Key terms (one per line)</label>
+          <textarea class="input !min-h-[10rem]" id="terms" name="terms" maxlength="3000"></textarea>
+        </div>
+      </form>
+
+      <aside class="lg:col-span-4" aria-label="Quote summary">
+        <div class="border border-line p-6 lg:sticky lg:top-28">
+          <h2 class="eyebrow">Summary</h2>
+          <dl class="mt-6 space-y-3 text-sm" aria-live="polite">
+            <div class="flex justify-between"><dt class="text-muted">Subtotal</dt><dd id="sum-sub">£0.00</dd></div>
+            <div class="flex justify-between" id="sum-vat-row" hidden><dt class="text-muted">VAT (20%)</dt><dd id="sum-vat">£0.00</dd></div>
+            <div class="flex justify-between border-t border-line pt-4 font-display text-2xl"><dt>Total</dt><dd id="sum-total">£0.00</dd></div>
+            <div class="flex justify-between" id="sum-dep-row" hidden><dt class="text-muted">Deposit</dt><dd id="sum-dep">£0.00</dd></div>
+            <div class="flex justify-between" id="sum-bal-row" hidden><dt class="text-muted">Balance</dt><dd id="sum-bal">£0.00</dd></div>
+          </dl>
+
+          <p id="quote-errors" class="mt-6 hidden text-sm text-error" role="alert"></p>
+
+          <button type="button" class="btn btn-primary mt-8 w-full" id="make-pdf">
+            <span data-label>Create PDF quote</span>
+          </button>
+          <p id="pdf-status" class="mt-4 text-sm text-muted" role="status"></p>
+
+          <div class="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-6 text-sm">
+            <button type="button" class="link-quiet !text-[0.68rem]" id="new-quote">New quote</button>
+            <button type="button" class="link-quiet !text-[0.68rem]" id="clear-draft">Clear draft</button>
+          </div>
+          <p class="mt-4 text-xs text-muted" id="draft-status">Draft is saved on this device as you type.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <template id="item-template">
+    <li class="grid grid-cols-[1fr_4.5rem] gap-3 border-b border-line pb-4 md:grid-cols-[1fr_5rem_7rem_2.75rem] md:border-0 md:pb-0">
+      <div class="col-span-2 md:col-span-1">
+        <label class="sr-only" data-l="desc">Description</label>
+        <input class="input" data-f="description" type="text" list="service-suggestions" maxlength="300" placeholder="Description" />
+      </div>
+      <div>
+        <label class="sr-only" data-l="qty">Quantity</label>
+        <input class="input" data-f="qty" type="number" min="1" max="99" step="1" inputmode="numeric" value="1" />
+      </div>
+      <div>
+        <label class="sr-only" data-l="price">Price per item in pounds</label>
+        <input class="input" data-f="price" type="text" inputmode="decimal" placeholder="0.00" />
+      </div>
+      <button type="button" class="text-muted hover:text-champagne md:justify-self-end" data-remove>
+        <span class="sr-only" data-l="remove">Remove line</span><span aria-hidden="true">Remove</span>
+      </button>
+    </li>
+  </template>
+
+  <script type="application/json" id="quote-config" set:html={JSON.stringify(config).replace(/</g, '\\u003c')} />
+</Base>
+
+<script>
+  import { buildQuotePdf, calculate, gbp, type QuoteData } from '../../lib/quote-pdf';
+  import displayUrl from '@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-normal.woff?url';
+  import displayItalicUrl from '@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-italic.woff?url';
+  import sansUrl from '@fontsource/dm-sans/files/dm-sans-latin-400-normal.woff?url';
+  import sansMediumUrl from '@fontsource/dm-sans/files/dm-sans-latin-500-normal.woff?url';
+  import scriptUrl from '@fontsource/allura/files/allura-latin-400-normal.woff?url';
+  import sealUrl from '../../assets/brand/logo-seal.png?url';
+  import logoUrl from '../../assets/brand/logo.png?url';
+
+  interface Config {
+    aboutText: string;
+    thankYou: string;
+    validityDays: number;
+    paymentInstructions: string;
+    keyTerms: string[];
+    businessName: string;
+    contactLines: string[];
+    termsUrl: string;
+  }
+  const config: Config = JSON.parse(document.getElementById('quote-config')!.textContent!);
+
+  const KEY = 'bbn-quote-draft-v1';
+  const form = document.getElementById('quote-form') as HTMLFormElement;
+  const itemsEl = document.getElementById('items') as HTMLUListElement;
+  const template = document.getElementById('item-template') as HTMLTemplateElement;
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const val = (id: string) => ($(id) as HTMLInputElement).value.trim();
+
+  const today = () => new Date().toISOString().slice(0, 10);
+
+  /** Money text → integer pence. Returns NaN for invalid input, 0 for blank. */
+  const toPence = (text: string) => {
+    const t = text.replace(/[£,\s]/g, '');
+    if (t === '') return 0;
+    if (!/^\d+(\.\d{1,2})?$/.test(t)) return NaN;
+    return Math.round(parseFloat(t) * 100);
+  };
+
+  let rowId = 0;
+  const addRow = (v: { description?: string; qty?: string; price?: string } = {}, focus = false) => {
+    const row = (template.content.cloneNode(true) as DocumentFragment).firstElementChild as HTMLLIElement;
+    const n = ++rowId;
+    row.querySelectorAll<HTMLInputElement>('[data-f]').forEach((input) => {
+      const f = input.dataset.f!;
+      input.id = `item-${n}-${f}`;
+      const label = row.querySelector<HTMLLabelElement>(`[data-l="${f === 'description' ? 'desc' : f}"]`);
+      if (label) label.htmlFor = input.id;
+    });
+    (row.querySelector('[data-f="description"]') as HTMLInputElement).value = v.description ?? '';
+    if (v.qty) (row.querySelector('[data-f="qty"]') as HTMLInputElement).value = v.qty;
+    (row.querySelector('[data-f="price"]') as HTMLInputElement).value = v.price ?? '';
+    itemsEl.append(row);
+    if (focus) (row.querySelector('[data-f="description"]') as HTMLInputElement).focus();
+  };
+
+  const readItems = () =>
+    Array.from(itemsEl.children).map((row) => ({
+      description: (row.querySelector('[data-f="description"]') as HTMLInputElement).value.trim(),
+      qtyText: (row.querySelector('[data-f="qty"]') as HTMLInputElement).value.trim(),
+      priceText: (row.querySelector('[data-f="price"]') as HTMLInputElement).value.trim(),
+    }));
+
+  /* ------------------------------------------------------------- draft state */
+  const fields = ['reference', 'issueDate', 'validDays', 'customerName', 'customerEmail', 'customerPhone', 'eventDate', 'eventTime', 'eventVenue', 'eventPeople', 'travelLabel', 'travelAmount', 'vatNumber', 'deposit', 'notes', 'payment', 'terms'];
+
+  const defaults = () => ({
+    reference: `Q-${today().replace(/-/g, '')}-01`,
+    issueDate: today(),
+    validDays: String(config.validityDays),
+    travelLabel: 'Travel',
+    payment: config.paymentInstructions,
+    terms: config.keyTerms.join('\n'),
+  });
+
+  const apply = (state: Record<string, unknown>) => {
+    fields.forEach((f) => (($(f) as HTMLInputElement).value = String(state[f] ?? '')));
+    ($('vat') as HTMLInputElement).checked = Boolean(state.vat);
+    itemsEl.replaceChildren();
+    const rows = Array.isArray(state.items) && state.items.length ? (state.items as { description?: string; qty?: string; price?: string }[]) : [{}];
+    rows.forEach((r) => addRow(r));
+    sync();
+  };
+
+  const snapshot = () => ({
+    ...Object.fromEntries(fields.map((f) => [f, ($(f) as HTMLInputElement).value])),
+    vat: ($('vat') as HTMLInputElement).checked,
+    items: readItems().map((i) => ({ description: i.description, qty: i.qtyText, price: i.priceText })),
+  });
+
+  let saveTimer: number | undefined;
+  const save = () => {
+    window.clearTimeout(saveTimer);
+    saveTimer = window.setTimeout(() => {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(snapshot()));
+        $('draft-status').textContent = 'Draft saved on this device.';
+      } catch {
+        $('draft-status').textContent = 'Draft could not be saved (private browsing?).';
+      }
+    }, 400);
+  };
+
+  /* ----------------------------------------------------------------- summary */
+  const collect = (): { data?: QuoteData; errors: string[] } => {
+    const errors: string[] = [];
+    if (!val('customerName')) errors.push('Enter the client name.');
+
+    const items: QuoteData['items'] = [];
+    readItems().forEach((r, i) => {
+      if (!r.description && !r.priceText) return; // blank row
+      const qty = Number(r.qtyText);
+      const unit = toPence(r.priceText);
+      if (!r.description) errors.push(`Line ${i + 1}: add a description.`);
+      else if (!Number.isInteger(qty) || qty < 1 || qty > 99) errors.push(`Line ${i + 1}: quantity must be a whole number from 1 to 99.`);
+      else if (Number.isNaN(unit)) errors.push(`Line ${i + 1}: price must be an amount such as 150 or 150.00.`);
+      else items.push({ description: r.description, qty, unitPence: unit });
+    });
+    if (items.length === 0 && errors.length === 0) errors.push('Add at least one service with a price.');
+
+    const travel = toPence(val('travelAmount'));
+    const deposit = toPence(val('deposit'));
+    if (Number.isNaN(travel)) errors.push('Travel cost must be an amount such as 45 or 45.00.');
+    if (Number.isNaN(deposit)) errors.push('Deposit must be an amount such as 100 or 100.00.');
+
+    const data: QuoteData = {
+      reference: val('reference') || 'Quotation',
+      issueDate: val('issueDate') || today(),
+      validDays: Math.max(0, Math.min(365, Math.floor(Number(val('validDays')) || 0))),
+      customer: { name: val('customerName'), email: val('customerEmail'), phone: val('customerPhone') },
+      event: { date: val('eventDate'), time: val('eventTime'), venue: val('eventVenue'), people: val('eventPeople') },
+      items,
+      travel: Number.isNaN(travel) || travel <= 0 ? null : { label: val('travelLabel') || 'Travel', amountPence: travel },
+      vat: ($('vat') as HTMLInputElement).checked,
+      vatNumber: val('vatNumber'),
+      depositPence: Number.isNaN(deposit) ? 0 : deposit,
+      notes: val('notes'),
+      payment: val('payment'),
+      terms: val('terms').split(/\n+/).map((s) => s.trim()).filter(Boolean),
+    };
+    return { data, errors };
+  };
+
+  const sync = () => {
+    const vatOn = ($('vat') as HTMLInputElement).checked;
+    $('vat-number-field').hidden = !vatOn;
+    $('sum-vat-row').hidden = !vatOn;
+    const { data } = collect();
+    const t = calculate(data!);
+    $('sum-sub').textContent = gbp(t.subtotalPence);
+    $('sum-vat').textContent = gbp(t.vatPence);
+    $('sum-total').textContent = gbp(t.totalPence);
+    $('sum-dep-row').hidden = $('sum-bal-row').hidden = t.depositPence <= 0;
+    $('sum-dep').textContent = gbp(t.depositPence);
+    $('sum-bal').textContent = gbp(t.balancePence);
+  };
+
+  form.addEventListener('input', () => {
+    sync();
+    save();
+  });
+  form.addEventListener('change', () => {
+    sync();
+    save();
+  });
+  form.addEventListener('submit', (e) => e.preventDefault());
+
+  $('add-item').addEventListener('click', () => {
+    addRow({}, true);
+    save();
+  });
+  itemsEl.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('[data-remove]');
+    if (!btn) return;
+    btn.closest('li')!.remove();
+    if (itemsEl.children.length === 0) addRow();
+    sync();
+    save();
+  });
+
+  const reset = () => {
+    localStorage.removeItem(KEY);
+    apply(defaults());
+    $('draft-status').textContent = 'Started a fresh quote.';
+  };
+  $('new-quote').addEventListener('click', () => {
+    if (confirm('Start a new quote? The current draft on this device will be cleared.')) reset();
+  });
+  $('clear-draft').addEventListener('click', () => {
+    if (confirm('Clear the saved draft from this device?')) reset();
+  });
+
+  /* ------------------------------------------------------------------- PDF */
+  const fetchBytes = async (url: string) => new Uint8Array(await (await fetch(url)).arrayBuffer());
+  const button = $('make-pdf') as HTMLButtonElement;
+  const status = $('pdf-status');
+  const errorsEl = $('quote-errors');
+
+  button.addEventListener('click', async () => {
+    const { data, errors } = collect();
+    if (errors.length) {
+      errorsEl.textContent = errors.join(' ');
+      errorsEl.classList.remove('hidden');
+      status.textContent = '';
+      return;
+    }
+    errorsEl.classList.add('hidden');
+    button.disabled = true;
+    status.textContent = 'Creating your PDF…';
+    try {
+      const [display, displayItalic, sans, sansMedium, script, seal, logo] = await Promise.all(
+        [displayUrl, displayItalicUrl, sansUrl, sansMediumUrl, scriptUrl, sealUrl, logoUrl].map(fetchBytes),
+      );
+      const blob = await buildQuotePdf(
+        data!,
+        { businessName: config.businessName, about: config.aboutText, thankYou: config.thankYou, contactLines: config.contactLines, termsUrl: config.termsUrl },
+        { display, displayItalic, sans, sansMedium, script, seal, logo },
+      );
+      const safe = `${data!.reference}-${data!.customer.name}`.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `quotation-${safe}.pdf`;
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 30_000);
+      status.textContent = 'Your PDF has been downloaded.';
+    } catch (err) {
+      console.error('quote pdf failed', err);
+      status.textContent = 'The PDF could not be created. Please try again.';
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  /* ------------------------------------------------------------------ boot */
+  let initial: Record<string, unknown> = defaults();
+  try {
+    const stored = localStorage.getItem(KEY);
+    if (stored) initial = { ...initial, ...JSON.parse(stored) };
+  } catch {
+    /* ignore corrupt drafts */
+  }
+  apply(initial);
+</script>

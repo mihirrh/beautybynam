@@ -1,0 +1,99 @@
+---
+import { settings } from '../lib/site';
+
+interface Props {
+  /** Hero pages let the photograph run under a transparent header. */
+  overlay?: boolean;
+}
+const { overlay = false } = Astro.props;
+const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+const isActive = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`));
+---
+
+<a
+  href="#main"
+  class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-ink focus:px-4 focus:py-3 focus:text-champagne"
+>
+  Skip to content
+</a>
+
+<header
+  class:list={['site-header fixed inset-x-0 top-0 z-[60] transition-[background-color,border-color] duration-500', overlay ? 'is-overlay' : 'is-solid']}
+  data-header
+>
+  <div class="wrap flex h-20 items-center justify-between gap-8">
+    <a href="/" class="group flex flex-col leading-none">
+      <span class="font-script text-[2rem] text-champagne">beauty by nam</span>
+      <span class="mt-1 text-[0.6rem] font-medium uppercase tracking-[0.34em] text-antique">{settings.tagline}</span>
+    </a>
+
+    <nav aria-label="Primary" class="hidden items-center gap-9 lg:flex">
+      {settings.nav.map((item) => (
+        <a href={item.href} class="nav-link" aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
+      ))}
+      <a href="/contact" class="btn btn-primary !min-h-0 !px-6 !py-3">{settings.headerCta}</a>
+    </nav>
+
+    <button
+      type="button"
+      class="relative -mr-2 flex h-11 w-11 items-center justify-center lg:hidden"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Open menu"
+      data-menu-toggle
+    >
+      <span class="sr-only">Menu</span>
+      <span class="relative block h-3.5 w-7" aria-hidden="true">
+        <span class="absolute left-0 top-0 h-px w-full bg-champagne transition-transform duration-500" data-bar="1"></span>
+        <span class="absolute bottom-0 left-0 h-px w-full bg-champagne transition-transform duration-500" data-bar="2"></span>
+      </span>
+    </button>
+  </div>
+</header>
+
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-[55] hidden bg-ink lg:hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menu"
+  data-menu
+>
+  <nav aria-label="Mobile" class="flex h-full flex-col justify-center px-[var(--gutter)] pb-10 pt-24">
+    <ul class="space-y-1">
+      {settings.nav.map((item, i) => (
+        <li data-menu-item>
+          <a
+            href={item.href}
+            class="block py-2 font-display text-[2.4rem] font-light leading-tight text-cream"
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            <span class="mr-4 text-xs tracking-[0.3em] text-antique">{String(i + 1).padStart(2, '0')}</span>{item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <div class="mt-10" data-menu-item>
+      <a href="/contact" class="btn btn-primary w-full">Enquire About Your Wedding</a>
+    </div>
+  </nav>
+</div>
+
+<style>
+  .site-header.is-solid,
+  .site-header.is-scrolled {
+    background: rgb(8 8 8 / 0.92);
+    border-bottom: 1px solid var(--color-line);
+    backdrop-filter: blur(10px);
+  }
+  .site-header.is-overlay:not(.is-scrolled) {
+    background: linear-gradient(to bottom, rgb(8 8 8 / 0.65), transparent);
+    border-bottom: 1px solid transparent;
+  }
+  [data-menu-toggle][aria-expanded='true'] [data-bar='1'] {
+    transform: translateY(6.5px) rotate(45deg);
+  }
+  [data-menu-toggle][aria-expanded='true'] [data-bar='2'] {
+    transform: translateY(-6.5px) rotate(-45deg);
+  }
+</style>

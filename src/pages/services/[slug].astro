@@ -1,0 +1,106 @@
+---
+import { getCollection, render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ClosingCta from '../../components/ClosingCta.astro';
+import { has } from '../../lib/site';
+import { media } from '../../lib/media';
+import { serviceSchema } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+  return services.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, next: services[(i + 1) % services.length] },
+  }));
+}
+
+const { entry, next } = Astro.props;
+const s = entry.data;
+const { Content } = await render(entry);
+
+const path = `/services/${entry.id}`;
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Services', path: '/services' },
+  { name: s.title, path },
+];
+const cover = media(s.image);
+const coverUrl = new URL((await getImage({ src: cover, width: 1200, format: 'jpg' })).src, Astro.site).toString();
+---
+
+<Base
+  title={s.seoTitle || `${s.title} in Leicester | Beauty by Nam`}
+  description={s.seoDescription || s.summary}
+  image={s.image}
+  breadcrumbs={trail}
+  schema={[serviceSchema(Astro.site!, { name: s.title, description: s.summary, path, image: coverUrl })]}
+>
+  <PageHeader eyebrow="Service" title={s.title} intro={s.summary} trail={trail} />
+
+  <section class="wrap pb-20 md:pb-28">
+    <Photo
+      src={cover}
+      alt={s.imageAlt}
+      ratio="16 / 9"
+      priority
+      keyline
+      widths={[768, 1280, 1920]}
+      sizes="(min-width: 1280px) 1280px, 100vw"
+    />
+  </section>
+
+  <section class="pb-24 md:pb-32">
+    <div class="wrap grid gap-14 md:grid-cols-12 md:gap-8">
+      <div class="prose-lux md:col-span-6" data-stagger>
+        <Content />
+      </div>
+
+      <aside class="md:col-span-5 md:col-start-8" aria-label={`${s.title} details`}>
+        <div class="border-t border-line pt-6" data-reveal>
+          <h2 class="eyebrow">What is included</h2>
+          <ul class="prose-lux mt-5">
+            {s.includes.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+        <div class="mt-10 border-t border-line pt-6" data-reveal>
+          <h2 class="eyebrow">Who it is for</h2>
+          <p class="mt-4 text-muted">{s.suitableFor}</p>
+        </div>
+        <div class="mt-10 border-t border-line pt-6" data-reveal>
+          <h2 class="eyebrow">What to expect</h2>
+          <p class="mt-4 text-muted">{s.expect}</p>
+        </div>
+        {
+          has(s.priceFrom) && (
+            <div class="mt-10 border-t border-line pt-6" data-reveal>
+              <h2 class="eyebrow">Pricing</h2>
+              <p class="mt-4 font-display text-3xl text-champagne">{s.priceFrom}</p>
+              {has(s.priceNote) && <p class="mt-2 text-sm text-muted">{s.priceNote}</p>}
+            </div>
+          )
+        }
+        <div class="mt-12" data-reveal>
+          <a href={`/contact?service=${encodeURIComponent(s.title)}`} class="btn btn-primary">
+            Enquire about {s.title.toLowerCase()}<span class="arrow" aria-hidden="true"></span>
+          </a>
+          <p class="mt-4 text-xs text-muted">Travel costs are added separately. See the <a href="/terms" class="underline underline-offset-4">terms</a>.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section surface-2" aria-label="Next service">
+    <div class="wrap flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+      <div>
+        <p class="eyebrow">Next</p>
+        <p class="h2 mt-3"><a href={`/services/${next.id}`} class="hover:text-champagne">{next.data.title}</a></p>
+      </div>
+      <a href="/services" class="link-quiet">All services<span class="arrow" aria-hidden="true"></span></a>
+    </div>
+  </section>
+
+  <ClosingCta />
+</Base>

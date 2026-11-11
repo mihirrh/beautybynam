@@ -1,0 +1,22 @@
+{
+  "businessName": "Beauty by Nam",
+  "tagline": "Hair · Makeup · Beauty",
+  "locality": "Leicester",
+  "region": "Leicestershire",
+  "areaServed": ["Leicester", "Leicestershire", "East Midlands", "United Kingdom"],
+  "email": "",
+  "phone": "",
+  "instagramHandle": "beautybynamm",
+  "instagramUrl": "https://www.instagram.com/beautybynamm/",
+  "nav": [
+    { "label": "Portfolio", "href": "/portfolio" },
+    { "label": "Services", "href": "/services" },
+    { "label": "About", "href": "/about" },
+    { "label": "Testimonials", "href": "/testimonials" },
+    { "label": "Journal", "href": "/blog" },
+    { "label": "Contact", "href": "/contact" }
+  ],
+  "headerCta": "Enquire",
+  "footerBlurb": "Bridal and occasion hair and makeup for Leicester, Leicestershire and weddings across the UK.",
+  "defaultShareImage": "/src/assets/media/social/og-default.jpg"
+}

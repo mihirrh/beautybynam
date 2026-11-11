@@ -1,0 +1,677 @@
+# Pages CMS configuration for Beauty by Nam
+# https://pagescms.org/docs/configuration/
+#
+# Every field below is rendered somewhere on the website. Field names match
+# the keys in src/content/** exactly, so do not rename them without also
+# changing the matching template.
+
+media:
+  input: src/assets/media
+  output: /src/assets/media
+  # Images are stored in the repository, never on a third-party host.
+  categories: [image]
+  extensions: [jpg, jpeg, png, webp, avif]
+
+content:
+  # ──────────────────────────────────────────────────────────────────────
+  # Site-wide
+  # ──────────────────────────────────────────────────────────────────────
+  - name: settings
+    label: Business details & navigation
+    type: file
+    path: src/content/site/settings.json
+    format: json
+    fields:
+      - name: businessName
+        label: Business name
+        type: string
+        required: true
+        default: Beauty by Nam
+      - name: tagline
+        label: Header tagline
+        description: Small line of text under the logo in the header.
+        type: string
+        required: true
+        default: Hair · Makeup · Beauty
+        options: { maxlength: 40 }
+      - name: email
+        label: Email address
+        description: Shown in the footer and on the contact page. Leave blank to hide it everywhere, including search engine data.
+        type: string
+        pattern:
+          regex: "^$|^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+          message: Please enter a valid email address.
+      - name: phone
+        label: Phone number
+        description: Include the dialling code, for example 07700 900000. Leave blank to hide it everywhere.
+        type: string
+        pattern:
+          regex: "^$|^[0-9+()\\s-]{7,20}$"
+          message: Use digits, spaces, brackets, + or - only.
+      - name: instagramHandle
+        label: Instagram handle
+        description: Without the @ symbol.
+        type: string
+        required: true
+        default: beautybynamm
+      - name: instagramUrl
+        label: Instagram profile link
+        type: string
+        required: true
+        default: https://www.instagram.com/beautybynamm/
+        pattern:
+          regex: "^https://"
+          message: The link must start with https://
+      - name: locality
+        label: Town or city
+        description: Where Beauty by Nam is based. Used in the footer, contact page and search engine data.
+        type: string
+        required: true
+        default: Leicester
+      - name: region
+        label: County or region
+        type: string
+        required: true
+        default: Leicestershire
+      - name: areaServed
+        label: Areas covered
+        description: Used in search engine data. Add one place per line.
+        type: string
+        list: true
+        required: true
+      - name: nav
+        label: Main navigation
+        description: Links shown in the header and footer, in this order. Drag to reorder.
+        type: object
+        list: true
+        required: true
+        fields:
+          - name: label
+            label: Link text
+            type: string
+            required: true
+            options: { maxlength: 24 }
+          - name: href
+            label: Page address
+            description: For example /portfolio. Internal pages only.
+            type: string
+            required: true
+            pattern:
+              regex: "^/"
+              message: Must start with a forward slash, for example /about
+      - name: headerCta
+        label: Header button text
+        type: string
+        required: true
+        default: Enquire
+        options: { maxlength: 20 }
+      - name: footerBlurb
+        label: Footer introduction
+        type: text
+        required: true
+        options: { maxlength: 220 }
+      - name: defaultShareImage
+        label: Default social sharing image
+        description: Used when a page does not have its own. Ideally 1200 × 630 pixels.
+        type: image
+        required: true
+        options:
+          path: src/assets/media/social
+
+  - name: seo
+    label: Search & social settings (SEO)
+    type: file
+    path: src/content/site/seo.json
+    format: json
+    fields:
+      - name: home
+        label: Home page
+        type: object
+        fields: &seo-fields
+          - name: title
+            label: Page title
+            description: Shown in Google results and browser tabs. Aim for under 60 characters.
+            type: string
+            required: true
+            options: { maxlength: 70 }
+          - name: description
+            label: Meta description
+            description: The short summary shown under the title in Google. Aim for 120 to 160 characters.
+            type: text
+            required: true
+            options: { maxlength: 170 }
+          - name: image
+            label: Social sharing image (optional)
+            description: Shown when the page is shared on social media. Leave empty to use the default image.
+            type: image
+            options:
+              path: src/assets/media/social
+      - name: about
+        label: About page
+        type: object
+        fields: *seo-fields
+      - name: services
+        label: Services overview page
+        type: object
+        fields: *seo-fields
+      - name: portfolio
+        label: Portfolio page
+        type: object
+        fields: *seo-fields
+      - name: testimonials
+        label: Testimonials page
+        type: object
+        fields: *seo-fields
+      - name: contact
+        label: Contact page
+        type: object
+        fields: *seo-fields
+      - name: blog
+        label: Journal (blog) page
+        type: object
+        fields: *seo-fields
+      - name: terms
+        label: Terms & Conditions page
+        type: object
+        fields: *seo-fields
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Pages
+  # ──────────────────────────────────────────────────────────────────────
+  - name: home
+    label: Home page
+    type: file
+    path: src/content/site/home.json
+    format: json
+    fields:
+      - name: hero
+        label: Hero (top of the page)
+        type: object
+        fields:
+          - name: eyebrow
+            label: Small line above the headline
+            type: string
+            required: true
+          - name: headline
+            label: Headline
+            type: string
+            required: true
+            options: { maxlength: 80 }
+          - name: text
+            label: Supporting text
+            type: text
+            required: true
+            options: { maxlength: 260 }
+          - name: image
+            label: Hero photograph
+            description: Landscape or portrait works, but choose your strongest bridal image. At least 2400 pixels wide.
+            type: image
+            required: true
+            options:
+              path: src/assets/media/hero
+          - name: imageAlt
+            label: Photograph description (alt text)
+            description: Describe what is in the photograph for people using screen readers and for search engines.
+            type: string
+            required: true
+          - name: primaryCta
+            label: Main button text
+            type: string
+            required: true
+            options: { maxlength: 36 }
+          - name: secondaryCta
+            label: Second link text
+            type: string
+            required: true
+            options: { maxlength: 36 }
+      - name: featured
+        label: Featured work heading
+        description: The images themselves are chosen in “Portfolio gallery” by ticking “Show on home page”.
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string, required: true }
+          - { name: heading, label: Heading, type: string, required: true }
+          - { name: linkLabel, label: Link text to the portfolio, type: string, required: true }
+      - name: aboutIntro
+        label: About introduction
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string, required: true }
+          - { name: heading, label: Heading, type: string, required: true }
+          - name: text
+            label: Text
+            description: Leave a blank line between paragraphs.
+            type: text
+            required: true
+          - name: image
+            label: Photograph
+            type: image
+            required: true
+            options: { path: src/assets/media/about }
+          - { name: imageAlt, label: Photograph description (alt text), type: string, required: true }
+          - { name: linkLabel, label: Link text to the About page, type: string, required: true }
+      - name: servicesIntro
+        label: Services introduction
+        description: The four services themselves are edited under “Services”.
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string, required: true }
+          - { name: heading, label: Heading, type: string, required: true }
+          - { name: text, label: Text, type: text, required: true }
+      - name: testimonialsIntro
+        label: Testimonials heading
+        description: Shown only when at least one testimonial has been added.
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string, required: true }
+          - { name: heading, label: Heading, type: string, required: true }
+      - name: instagram
+        label: Instagram section
+        description: The pictures are chosen in “Instagram gallery”.
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string, required: true }
+          - { name: heading, label: Heading, type: string, required: true }
+          - { name: text, label: Text, type: text, required: true }
+          - { name: buttonLabel, label: Button text, type: string, required: true }
+      - name: closingCta
+        label: Closing enquiry section
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string, required: true }
+          - { name: heading, label: Heading, type: string, required: true }
+          - { name: text, label: Text, type: text, required: true }
+          - { name: buttonLabel, label: Button text, type: string, required: true }
+          - name: image
+            label: Background photograph
+            type: image
+            required: true
+            options: { path: src/assets/media/cta }
+          - { name: imageAlt, label: Photograph description (alt text), type: string, required: true }
+
+  - name: about
+    label: About page
+    type: file
+    path: src/content/site/about.json
+    format: json
+    fields:
+      - { name: eyebrow, label: Small line above the heading, type: string, required: true }
+      - { name: heading, label: Heading, type: string, required: true }
+      - { name: intro, label: Introduction, type: text, required: true }
+      - name: portrait
+        label: Portrait of Nam
+        type: image
+        required: true
+        options: { path: src/assets/media/about }
+      - { name: portraitAlt, label: Portrait description (alt text), type: string, required: true }
+      - name: story
+        label: Brand story
+        description: Leave a blank line between paragraphs.
+        type: text
+        required: true
+      - { name: philosophyHeading, label: Philosophy heading, type: string, required: true }
+      - name: philosophy
+        label: Makeup philosophy
+        description: Leave a blank line between paragraphs.
+        type: text
+        required: true
+      - name: workingImage
+        label: Working photograph
+        type: image
+        required: true
+        options: { path: src/assets/media/about }
+      - { name: workingImageAlt, label: Working photograph description (alt text), type: string, required: true }
+      - { name: experienceHeading, label: “Booking” section heading, type: string, required: true }
+      - name: experienceSteps
+        label: Booking steps
+        description: Shown as numbered steps, in this order.
+        type: object
+        list: true
+        required: true
+        fields:
+          - { name: title, label: Step title, type: string, required: true }
+          - { name: text, label: Step description, type: text, required: true }
+      - { name: backgroundHeading, label: Training & experience heading, type: string, required: true }
+      - name: background
+        label: Training & experience
+        description: Only add qualifications, years of experience, awards or affiliations that are genuinely yours. If left empty, this whole section is hidden.
+        type: text
+      - { name: closingLine, label: Closing line, description: Shown in the script typeface. Keep it short., type: string, required: true, options: { maxlength: 60 } }
+
+  - name: contact
+    label: Contact page
+    type: file
+    path: src/content/site/contact.json
+    format: json
+    fields:
+      - { name: eyebrow, label: Small line above the heading, type: string, required: true }
+      - { name: heading, label: Heading, type: string, required: true }
+      - { name: intro, label: Welcome introduction, type: text, required: true }
+      - { name: formHeading, label: Form heading, type: string, required: true }
+      - { name: responseNote, label: Note under the form heading, type: string, required: true }
+      - { name: successHeading, label: “Enquiry sent” heading, type: string, required: true }
+      - { name: successMessage, label: “Enquiry sent” message, type: text, required: true }
+      - { name: detailsHeading, label: Direct contact heading, type: string, required: true }
+      - name: serviceOptions
+        label: Services shown in the enquiry form
+        description: One option per line. These are the choices visitors can tick.
+        type: string
+        list: true
+        required: true
+
+  - name: faqs
+    label: FAQs
+    description: Shown on the Contact and Services pages.
+    type: file
+    path: src/content/site/faqs.json
+    format: json
+    fields:
+      - { name: heading, label: Section heading, type: string, required: true }
+      - name: items
+        label: Questions
+        type: object
+        list: true
+        required: true
+        fields:
+          - { name: question, label: Question, type: string, required: true }
+          - { name: answer, label: Answer, type: text, required: true }
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Work, reviews and Instagram
+  # ──────────────────────────────────────────────────────────────────────
+  - name: gallery
+    label: Portfolio gallery
+    description: Add, remove and reorder photographs. The order here is the order on the website.
+    type: file
+    path: src/content/site/gallery.json
+    format: json
+    fields:
+      - { name: heading, label: Page heading, type: string, required: true }
+      - { name: intro, label: Page introduction, type: text, required: true }
+      - name: items
+        label: Photographs
+        type: object
+        list: true
+        required: true
+        fields:
+          - name: image
+            label: Photograph
+            description: Upload your highest-quality image. The website creates the smaller versions automatically.
+            type: image
+            required: true
+            options: { path: src/assets/media/gallery }
+          - name: alt
+            label: Description (alt text)
+            description: Describe what can be seen, for example “Bride with soft glam makeup and a low chignon”.
+            type: string
+            required: true
+            options: { maxlength: 160 }
+          - name: caption
+            label: Caption
+            description: Short line shown under the photograph and in the full-screen view.
+            type: string
+            required: true
+            options: { maxlength: 80 }
+          - name: category
+            label: Category
+            type: select
+            required: true
+            default: bridal-makeup
+            options:
+              values:
+                - { value: bridal-makeup, label: Bridal makeup }
+                - { value: bridal-hair, label: Bridal hair }
+                - { value: occasion, label: Occasion looks }
+                - { value: destination, label: Destination }
+          - name: featured
+            label: Show on home page
+            description: Tick this to include the photograph in the home page’s “Selected work”. Five or six works best.
+            type: boolean
+            default: false
+
+  - name: testimonials
+    label: Testimonials
+    description: Only add genuine feedback from real clients, with their permission.
+    type: file
+    path: src/content/site/testimonials.json
+    format: json
+    fields:
+      - { name: heading, label: Page heading, type: string, required: true }
+      - name: intro
+        label: Message shown while there are no testimonials
+        type: text
+        required: true
+      - name: items
+        label: Testimonials
+        type: object
+        list: true
+        fields:
+          - { name: quote, label: What they said, type: text, required: true }
+          - name: name
+            label: Name
+            description: A first name and initial is fine, for example “Priya S.”.
+            type: string
+            required: true
+          - name: detail
+            label: Wedding detail (optional)
+            description: For example “Wedding at a Leicestershire country house, June 2026”.
+            type: string
+
+  - name: instagram
+    label: Instagram gallery
+    description: >-
+      A hand-picked selection of images, not a live feed. Add, remove and
+      reorder pictures here to refresh the home page preview.
+    type: file
+    path: src/content/site/instagram.json
+    format: json
+    fields:
+      - name: items
+        label: Pictures
+        type: object
+        list: true
+        required: true
+        fields:
+          - name: image
+            label: Picture
+            type: image
+            required: true
+            options: { path: src/assets/media/instagram }
+          - { name: alt, label: Description (alt text), type: string, required: true }
+          - name: link
+            label: Link to the Instagram post (optional)
+            description: Leave empty to link to the profile instead.
+            type: string
+            pattern:
+              regex: "^$|^https://(www\\.)?instagram\\.com/"
+              message: Must be an https://www.instagram.com/ link.
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Services, journal, legal
+  # ──────────────────────────────────────────────────────────────────────
+  - name: services
+    label: Services
+    description: Each service has its own page. Prices are optional and nothing is shown unless you add it.
+    type: collection
+    path: src/content/services
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [title, order, priceFrom]
+      primary: title
+      sort: [order, title]
+      default:
+        sort: order
+        order: asc
+    fields:
+      - { name: title, label: Service name, type: string, required: true }
+      - name: order
+        label: Display order
+        description: Smaller numbers appear first.
+        type: number
+        required: true
+        default: 10
+        options: { min: 1, max: 99 }
+      - name: summary
+        label: Short summary
+        description: Shown on the home page, the services overview and under the page heading.
+        type: text
+        required: true
+        options: { maxlength: 220 }
+      - name: image
+        label: Photograph
+        type: image
+        required: true
+        options: { path: src/assets/media/services }
+      - { name: imageAlt, label: Photograph description (alt text), type: string, required: true }
+      - name: priceFrom
+        label: Price (optional)
+        description: For example “From £150”. Leave empty if you prefer to quote individually.
+        type: string
+      - name: priceNote
+        label: Price note (optional)
+        description: For example “Travel is quoted separately”. Only shown when a price is entered.
+        type: string
+      - name: includes
+        label: What is included
+        description: One item per line.
+        type: string
+        list: true
+        required: true
+      - name: suitableFor
+        label: Who it is suitable for
+        type: text
+        required: true
+      - name: expect
+        label: What to expect
+        type: text
+        required: true
+      - name: seoTitle
+        label: Search engine title (optional)
+        description: Leave empty to use the service name.
+        type: string
+        options: { maxlength: 70 }
+      - name: seoDescription
+        label: Search engine description (optional)
+        description: Aim for 120 to 160 characters.
+        type: text
+        options: { maxlength: 170 }
+      - name: body
+        label: Full description
+        type: rich-text
+        required: true
+
+  - name: blog
+    label: Journal (blog)
+    description: Articles for the Journal. Untick “Published” to keep an article as a draft.
+    type: collection
+    path: src/content/blog
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [title, date, category, draft]
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - name: description
+        label: Summary
+        description: Shown on the Journal page and used as the search engine description unless one is set below.
+        type: text
+        required: true
+        options: { maxlength: 200 }
+      - name: date
+        label: Publish date
+        type: date
+        required: true
+      - name: image
+        label: Cover photograph
+        type: image
+        required: true
+        options: { path: src/assets/media/blog }
+      - { name: imageAlt, label: Cover description (alt text), type: string, required: true }
+      - { name: author, label: Author, type: string, required: true, default: Nam }
+      - name: category
+        label: Category
+        description: For example Skincare, Wedding morning or Inspiration.
+        type: string
+        required: true
+        default: Journal
+      - name: draft
+        label: Draft (hide from the website)
+        description: Tick to keep this article off the website until it is ready.
+        type: boolean
+        default: false
+      - name: seoTitle
+        label: Search engine title (optional)
+        type: string
+        options: { maxlength: 70 }
+      - name: seoDescription
+        label: Search engine description (optional)
+        type: text
+        options: { maxlength: 170 }
+      - name: body
+        label: Article
+        type: rich-text
+        required: true
+
+  - name: terms
+    label: Terms & Conditions
+    description: Shown at /terms and summarised on every quote PDF.
+    type: file
+    path: src/content/legal/terms.md
+    format: yaml-frontmatter
+    fields:
+      - { name: title, label: Page title, type: string, required: true }
+      - name: updated
+        label: Last updated
+        type: date
+        required: true
+      - name: intro
+        label: Introduction
+        type: text
+      - name: body
+        label: Terms
+        description: Use headings (Heading 2) for each numbered section.
+        type: rich-text
+        required: true
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Private quote builder defaults
+  # ──────────────────────────────────────────────────────────────────────
+  - name: quote
+    label: Quote PDF
+    description: >-
+      Default wording for the private quote builder at /studio/quote. You can
+      still change any of it for an individual quote before creating the PDF.
+    type: file
+    path: src/content/site/quote.json
+    format: json
+    fields:
+      - name: aboutText
+        label: “About my business” text (cover page)
+        type: text
+        required: true
+      - name: thankYou
+        label: Thank-you message (cover page)
+        type: text
+        required: true
+      - name: validityDays
+        label: Quote valid for (days)
+        type: number
+        required: true
+        default: 14
+        options: { min: 1, max: 365 }
+      - name: paymentInstructions
+        label: Default payment instructions
+        description: For example your bank details. They are printed on the quote, so keep them accurate.
+        type: text
+      - name: keyTerms
+        label: Key terms printed on the quote
+        description: One short statement per line. The full terms are linked from the PDF.
+        type: string
+        list: true
+        required: true

@@ -1,0 +1,14 @@
+{
+  "heading": "Portfolio",
+  "intro": "A selection of bridal and occasion looks. Tap any image to view it full screen.",
+  "items": [
+    { "image": "/src/assets/media/gallery/bridal-look-01.jpg", "alt": "Bridal look 01: soft glam makeup with an elegant updo", "caption": "Soft glam with an elegant updo", "category": "bridal-makeup", "featured": true },
+    { "image": "/src/assets/media/gallery/bridal-look-02.jpg", "alt": "Bridal look 02: radiant natural makeup", "caption": "Radiant, natural skin", "category": "bridal-makeup", "featured": true },
+    { "image": "/src/assets/media/gallery/bridal-look-03.jpg", "alt": "Bridal look 03: romantic loose waves", "caption": "Romantic loose waves", "category": "bridal-hair", "featured": true },
+    { "image": "/src/assets/media/gallery/bridal-look-04.jpg", "alt": "Bridal look 04: defined eyes and a classic lip", "caption": "Defined eyes, classic lip", "category": "bridal-makeup", "featured": true },
+    { "image": "/src/assets/media/gallery/bridal-look-05.jpg", "alt": "Bridal look 05: low chignon with veil placement", "caption": "Low chignon, veil in place", "category": "bridal-hair", "featured": true },
+    { "image": "/src/assets/media/gallery/bridal-look-06.jpg", "alt": "Occasion look 06: evening glam", "caption": "Evening glam", "category": "occasion", "featured": false },
+    { "image": "/src/assets/media/gallery/bridal-look-07.jpg", "alt": "Destination look 07: sun-kissed wedding makeup", "caption": "Sun-kissed destination look", "category": "destination", "featured": false },
+    { "image": "/src/assets/media/gallery/bridal-look-08.jpg", "alt": "Bridal look 08: polished hair and makeup", "caption": "Polished from morning to midnight", "category": "bridal-hair", "featured": false }
+  ]
+}

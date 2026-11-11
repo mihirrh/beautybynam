@@ -1,0 +1,108 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import GoldRing from '../components/GoldRing.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { about, paragraphs, has } from '../lib/site';
+import { media } from '../lib/media';
+import { personSchema } from '../lib/schema';
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'About', path: '/about' },
+];
+const site = Astro.site!;
+---
+
+<Base page="about" breadcrumbs={trail} image={about.portrait} schema={[personSchema(site)]}>
+  <!-- Opening: portrait and introduction, offset rather than centred -->
+  <section class="overflow-x-clip"><div class="wrap pb-20 pt-36 md:pb-28 md:pt-44">
+    <Breadcrumbs trail={trail} />
+    <div class="mt-10 grid items-end gap-12 md:grid-cols-12 md:gap-8">
+      <div class="md:col-span-6" data-stagger>
+        <p class="eyebrow" data-reveal>{about.eyebrow}</p>
+        <h1 class="h1 mt-5" data-reveal>{about.heading}</h1>
+        <p class="lede mt-8" data-reveal>{about.intro}</p>
+      </div>
+      <div class="relative md:col-span-5 md:col-start-8">
+        <GoldRing class="pointer-events-none absolute -right-8 -top-10 z-0 h-[112%] w-[112%] max-w-none opacity-80" />
+        <Photo
+          src={media(about.portrait)}
+          alt={about.portraitAlt}
+          ratio="4 / 5"
+          priority
+          class="relative z-10"
+          sizes="(min-width: 768px) 40vw, 100vw"
+        />
+      </div>
+    </div>
+  </div></section>
+
+  <!-- Story -->
+  <section class="section surface-2" aria-labelledby="story-heading">
+    <div class="wrap grid gap-10 md:grid-cols-12 md:gap-8">
+      <div class="md:col-span-4">
+        <p class="eyebrow">The story</p>
+        <h2 id="story-heading" class="h2 mt-4">How Beauty by Nam began</h2>
+      </div>
+      <div class="prose-lux md:col-span-6 md:col-start-6" data-stagger>
+        {paragraphs(about.story).map((p) => <p data-reveal>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Philosophy with a working detail image -->
+  <section class="section" aria-labelledby="philosophy-heading">
+    <div class="wrap grid items-center gap-12 md:grid-cols-12 md:gap-8">
+      <div class="order-2 md:order-1 md:col-span-6">
+        <Photo
+          src={media(about.workingImage)}
+          alt={about.workingImageAlt}
+          ratio="7 / 5"
+          keyline
+          sizes="(min-width: 768px) 50vw, 100vw"
+        />
+      </div>
+      <div class="order-1 md:order-2 md:col-span-5 md:col-start-8" data-stagger>
+        <p class="eyebrow" data-reveal>Philosophy</p>
+        <h2 id="philosophy-heading" class="h2 mt-4" data-reveal>{about.philosophyHeading}</h2>
+        <div class="prose-lux mt-8">
+          {paragraphs(about.philosophy).map((p) => <p data-reveal>{p}</p>)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    has(about.background) && (
+      <section class="section surface-2" aria-labelledby="background-heading">
+        <div class="wrap grid gap-10 md:grid-cols-12 md:gap-8">
+          <h2 id="background-heading" class="h2 md:col-span-4">{about.backgroundHeading}</h2>
+          <div class="prose-lux md:col-span-6 md:col-start-6">
+            {paragraphs(about.background).map((p) => <p>{p}</p>)}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Client experience, as a numbered sequence rather than cards -->
+  <section class:list={['section', !has(about.background) && 'surface-2']} aria-labelledby="experience-heading">
+    <div class="wrap">
+      <h2 id="experience-heading" class="h2 max-w-2xl">{about.experienceHeading}</h2>
+      <ol class="mt-16 grid gap-12 md:grid-cols-3 md:gap-10">
+        {about.experienceSteps.map((step, i) => (
+          <li class="border-t border-line pt-6" data-reveal>
+            <span class="font-display text-3xl text-antique">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="h3 mt-4">{step.title}</h3>
+            <p class="mt-4 text-muted">{step.text}</p>
+          </li>
+        ))}
+      </ol>
+      <p class="script mt-20 text-center" data-reveal>{about.closingLine}</p>
+    </div>
+  </section>
+
+  <ClosingCta />
+</Base>

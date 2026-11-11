@@ -1,0 +1,22 @@
+---
+import Breadcrumbs from './Breadcrumbs.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  intro?: string;
+  trail: { name: string; path: string }[];
+  /** Headings on inner pages are the page <h1>. */
+  class?: string;
+}
+const { eyebrow, title, intro, trail, class: className = '' } = Astro.props;
+---
+
+<header class:list={['wrap pb-12 pt-36 md:pb-16 md:pt-44', className]}>
+  <Breadcrumbs trail={trail} />
+  <div class="mt-10 max-w-4xl" data-stagger>
+    <p class="eyebrow" data-reveal>{eyebrow}</p>
+    <h1 class="h1 mt-5" data-reveal>{title}</h1>
+    {intro && <p class="lede mt-7" data-reveal>{intro}</p>}
+  </div>
+</header>

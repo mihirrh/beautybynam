@@ -1,0 +1,581 @@
+@import 'tailwindcss';
+
+/* Self-hosted, latin-only subsets (no third-party font requests). */
+@import '@fontsource/cormorant-garamond/latin-300.css';
+@import '@fontsource/cormorant-garamond/latin-400.css';
+@import '@fontsource/cormorant-garamond/latin-400-italic.css';
+@import '@fontsource/dm-sans/latin-400.css';
+@import '@fontsource/dm-sans/latin-500.css';
+@import '@fontsource/allura/latin-400.css';
+
+/* ------------------------------------------------------------------ tokens
+   Single source of truth. Tailwind generates utilities (bg-ink, text-gold…)
+   from these and they remain available as plain CSS variables. */
+@theme {
+  --color-ink: #080808;
+  --color-ink-2: #111111;
+  --color-ink-3: #171717;
+  --color-gold: #d4af37;
+  --color-antique: #c9a96e;
+  --color-champagne: #e8d7b5;
+  --color-cream: #f7f3ec;
+  --color-muted: #b8b1a5;
+  --color-line: rgb(201 169 110 / 0.28);
+  --color-error: #f0a08a;
+
+  --font-display: 'Cormorant Garamond', 'Iowan Old Style', 'Times New Roman', serif;
+  --font-sans: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-script: 'Allura', 'Snell Roundhand', cursive;
+
+  --ease-lux: cubic-bezier(0.22, 0.7, 0.2, 1);
+}
+
+:root {
+  --gutter: clamp(1.25rem, 4.5vw, 3.5rem);
+  --section: clamp(5rem, 11vw, 9.5rem);
+  --header-h: 5rem;
+  /* Metallic, not shiny: low-contrast stops around antique gold. */
+  --gold-metal: linear-gradient(112deg, #a8884f 0%, #e8d7b5 36%, #c9a96e 58%, #9c7c42 100%);
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    font-family: var(--font-sans);
+    font-size: 100%;
+    line-height: 1.7;
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+  main {
+    flex: 1;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    line-height: 1.08;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--color-antique);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-champagne);
+    outline-offset: 4px;
+    border-radius: 1px;
+  }
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------- layout */
+@layer components {
+  .wrap {
+    width: min(100% - 2 * var(--gutter), 80rem);
+    margin-inline: auto;
+  }
+  .wrap-narrow {
+    width: min(100% - 2 * var(--gutter), 46rem);
+    margin-inline: auto;
+  }
+  .section {
+    padding-block: var(--section);
+  }
+  .surface-2 {
+    background: var(--color-ink-2);
+  }
+
+  /* -------------------------------------------------------------- type */
+  .display {
+    font-size: clamp(2.9rem, 7.4vw, 6.6rem);
+    line-height: 1;
+    letter-spacing: -0.015em;
+  }
+  .h1 {
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    line-height: 1.02;
+  }
+  .h2 {
+    font-size: clamp(2rem, 4.4vw, 3.6rem);
+  }
+  .h3 {
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    line-height: 1.15;
+  }
+  .lede {
+    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+    color: var(--color-muted);
+    max-width: 38rem;
+  }
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-antique);
+  }
+  .script {
+    font-family: var(--font-script);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+    line-height: 1.1;
+    color: var(--color-champagne);
+  }
+  .italic-serif {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+  }
+  .prose-lux {
+    color: var(--color-muted);
+    max-width: 40rem;
+  }
+  .prose-lux > * + * {
+    margin-top: 1.15em;
+  }
+  .prose-lux h2,
+  .prose-lux h3 {
+    color: var(--color-cream);
+    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+    margin-top: 2em;
+  }
+  .prose-lux a {
+    color: var(--color-champagne);
+    text-decoration: underline;
+    text-decoration-color: var(--color-line);
+    text-underline-offset: 0.25em;
+  }
+  .prose-lux ul {
+    list-style: none;
+    padding: 0;
+  }
+  .prose-lux ul li {
+    padding-left: 1.4rem;
+    position: relative;
+  }
+  .prose-lux ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.85em;
+    width: 0.6rem;
+    height: 1px;
+    background: var(--color-antique);
+  }
+  .prose-lux strong {
+    color: var(--color-cream);
+    font-weight: 500;
+  }
+
+  /* ----------------------------------------------------- gold details */
+  .rule {
+    height: 1px;
+    border: 0;
+    background: linear-gradient(90deg, transparent, var(--color-antique) 18%, var(--color-antique) 82%, transparent);
+    opacity: 0.6;
+  }
+  .rule-short {
+    width: 3.5rem;
+    height: 1px;
+    background: var(--gold-metal);
+  }
+  .gold-text {
+    background: var(--gold-metal);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ----------------------------------------------------------- buttons */
+  .btn {
+    --btn-fg: var(--color-cream);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    min-height: 3.1rem;
+    padding: 0.9rem 1.9rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.74rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--btn-fg);
+    border: 1px solid var(--color-antique);
+    cursor: pointer;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      color 0.45s var(--ease-lux),
+      border-color 0.45s var(--ease-lux);
+  }
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--gold-metal);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.55s var(--ease-lux);
+  }
+  .btn .arrow {
+    width: 1.5rem;
+    height: 1px;
+    background: currentColor;
+    position: relative;
+    transition: width 0.45s var(--ease-lux);
+  }
+  .btn .arrow::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -3px;
+    width: 7px;
+    height: 7px;
+    border-top: 1px solid currentColor;
+    border-right: 1px solid currentColor;
+    transform: rotate(45deg);
+  }
+  .btn-primary {
+    --btn-fg: var(--color-ink);
+    background: var(--gold-metal);
+    border-color: transparent;
+  }
+  .btn-primary::before {
+    background: var(--color-cream);
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: wait;
+  }
+  @media (hover: hover) {
+    .btn:hover:not(:disabled)::before {
+      transform: scaleX(1);
+    }
+    .btn:hover:not(:disabled) {
+      --btn-fg: var(--color-ink);
+      border-color: transparent;
+    }
+    .btn:hover:not(:disabled) .arrow {
+      width: 2.1rem;
+    }
+  }
+  .link-quiet {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.74rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-champagne);
+    text-decoration: none;
+    padding-block: 0.4rem;
+    background: linear-gradient(var(--color-antique), var(--color-antique)) left bottom / 100% 1px no-repeat;
+    transition: background-size 0.5s var(--ease-lux);
+  }
+  .link-quiet .arrow {
+    width: 1.3rem;
+    height: 1px;
+    background: currentColor;
+    position: relative;
+    transition: width 0.4s var(--ease-lux);
+  }
+  .link-quiet .arrow::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -3px;
+    width: 7px;
+    height: 7px;
+    border-top: 1px solid currentColor;
+    border-right: 1px solid currentColor;
+    transform: rotate(45deg);
+  }
+  @media (hover: hover) {
+    .link-quiet:hover .arrow {
+      width: 2rem;
+    }
+    .link-quiet:hover {
+      background-size: 40% 1px;
+    }
+  }
+
+  /* ------------------------------------------------------------ photos */
+  .photo {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-ink-3);
+  }
+  .photo picture,
+  .photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .photo img {
+    object-fit: cover;
+  }
+  .photo-zoom img {
+    transition: transform 1.1s var(--ease-lux);
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .photo-zoom:hover img {
+      transform: scale(1.04);
+    }
+  }
+  /* Fine inner keyline, only on selected images. */
+  .photo-keyline::after {
+    content: '';
+    position: absolute;
+    inset: 0.7rem;
+    border: 1px solid rgb(232 215 181 / 0.35);
+    pointer-events: none;
+  }
+
+  /* --------------------------------------------------------------- nav */
+  .nav-link {
+    position: relative;
+    font-size: 0.74rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-cream);
+    text-decoration: none;
+    padding-block: 0.5rem;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--gold-metal);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s var(--ease-lux);
+  }
+  .nav-link:hover::after,
+  .nav-link[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  /* ------------------------------------------------------------- forms */
+  .field label,
+  .field legend {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-champagne);
+    margin-bottom: 0.55rem;
+  }
+  .field .hint {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--color-muted);
+  }
+  .input {
+    width: 100%;
+    background: transparent;
+    color: var(--color-cream);
+    border: 0;
+    border-bottom: 1px solid var(--color-line);
+    padding: 0.7rem 0;
+    font: inherit;
+    font-size: 1.02rem;
+    border-radius: 0;
+    transition: border-color 0.3s;
+  }
+  textarea.input {
+    border: 1px solid var(--color-line);
+    padding: 0.85rem 1rem;
+    min-height: 8rem;
+    resize: vertical;
+  }
+  select.input {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--color-antique) 50%),
+      linear-gradient(135deg, var(--color-antique) 50%, transparent 50%);
+    background-position:
+      calc(100% - 14px) 55%,
+      calc(100% - 9px) 55%;
+    background-size:
+      5px 5px,
+      5px 5px;
+    background-repeat: no-repeat;
+  }
+  select.input option {
+    background: var(--color-ink-3);
+  }
+  .input::placeholder {
+    color: #8b857a;
+  }
+  .input:hover {
+    border-color: var(--color-antique);
+  }
+  .input:focus-visible {
+    outline: none;
+    border-color: var(--color-champagne);
+    box-shadow: 0 1px 0 0 var(--color-champagne);
+  }
+  textarea.input:focus-visible {
+    box-shadow: 0 0 0 1px var(--color-champagne);
+  }
+  .input[aria-invalid='true'] {
+    border-color: var(--color-error);
+  }
+  .field-error {
+    display: none;
+    margin-top: 0.45rem;
+    font-size: 0.86rem;
+    color: var(--color-error);
+  }
+  .field-error:not(:empty) {
+    display: block;
+  }
+  .check {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--color-line);
+    cursor: pointer;
+    font-size: 0.95rem;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--color-cream);
+    margin: 0;
+    transition: border-color 0.3s, background-color 0.3s;
+  }
+  .check:hover {
+    border-color: var(--color-antique);
+  }
+  .check:has(input:checked) {
+    border-color: var(--color-champagne);
+    background: rgb(201 169 110 / 0.08);
+  }
+  .check input {
+    accent-color: var(--color-antique);
+    width: 1.05rem;
+    height: 1.05rem;
+    flex: none;
+  }
+  /* Real checkbox presented as a switch (role="switch"), used by the quote builder. */
+  .check input[role='switch'] {
+    appearance: none;
+    position: relative;
+    width: 2.6rem;
+    height: 1.4rem;
+    border: 1px solid var(--color-antique);
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  .check input[role='switch']::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0.2rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background: var(--color-antique);
+    transform: translateY(-50%);
+    transition: transform 0.3s, background-color 0.3s;
+  }
+  .check input[role='switch']:checked {
+    background: rgb(201 169 110 / 0.25);
+    border-color: var(--color-champagne);
+  }
+  .check input[role='switch']:checked::after {
+    background: var(--color-champagne);
+    transform: translate(1.2rem, -50%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .check input[role='switch'],
+    .check input[role='switch']::after {
+      transition: none;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------- motion
+   Elements only start hidden when JavaScript is running AND the visitor has
+   not asked for reduced motion (class set by an inline script in <head>).
+   Otherwise everything is simply visible. */
+.motion-ok [data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+}
+/* Clip the inner picture, never the observed wrapper: a fully clipped target
+   never intersects the viewport, so its reveal would never fire. */
+.motion-ok [data-reveal-img] picture {
+  clip-path: inset(0 0 100% 0);
+}
+.motion-ok [data-reveal-img] img {
+  transform: scale(1.08);
+}
+.motion-ok [data-ring] path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.35s;
+  }
+  .site-header {
+    view-transition-name: site-header;
+  }
+}
+
+/* Print: used by the terms page. */
+@media print {
+  html {
+    background: #fff;
+    color: #000;
+  }
+  .site-header,
+  .site-footer {
+    display: none;
+  }
+}

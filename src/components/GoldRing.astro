@@ -1,0 +1,39 @@
+---
+/**
+ * The circular brushstroke from the logo, redrawn as a single fine SVG ring.
+ * Used sparingly: behind the About portrait, on the closing CTA and as a
+ * section marker. It is decoration only (aria-hidden).
+ */
+interface Props {
+  class?: string;
+  /** Animate the stroke drawing in when scrolled into view. */
+  draw?: boolean;
+}
+const { class: className = '', draw = true } = Astro.props;
+---
+
+<svg
+  class={className}
+  viewBox="0 0 200 200"
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+  data-ring={draw ? '' : undefined}
+  preserveAspectRatio="xMidYMid meet"
+>
+  <path
+    d="M101 6.5c52.6-.4 93.8 40.7 93.2 94.2-.6 53.1-44.6 93.4-97.5 92.8C44.5 192.9 5.9 150.2 7 99.6 8.1 49 49.8 7.8 101 6.5 Z M101 6.5c-12.4 1.6-23.5 4.3-33.2 9.2"
+    stroke="url(#ring-gold)"
+    stroke-width="1.4"
+    stroke-linecap="round"
+    pathLength="1"
+  ></path>
+  <defs>
+    <linearGradient id="ring-gold" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a8884f"></stop>
+      <stop offset="0.4" stop-color="#e8d7b5"></stop>
+      <stop offset="0.7" stop-color="#c9a96e"></stop>
+      <stop offset="1" stop-color="#9c7c42"></stop>
+    </linearGradient>
+  </defs>
+</svg>

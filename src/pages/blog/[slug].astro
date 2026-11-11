@@ -1,0 +1,65 @@
+---
+import { getCollection, render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ClosingCta from '../../components/ClosingCta.astro';
+import { media } from '../../lib/media';
+import { formatDate } from '../../lib/site';
+import { blogPostingSchema } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const p = entry.data;
+const { Content } = await render(entry);
+
+const path = `/blog/${entry.id}`;
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Journal', path: '/blog' },
+  { name: p.title, path },
+];
+const cover = media(p.image);
+const coverUrl = new URL((await getImage({ src: cover, width: 1200, format: 'jpg' })).src, Astro.site).toString();
+---
+
+<Base
+  title={p.seoTitle || `${p.title} | Beauty by Nam`}
+  description={p.seoDescription || p.description}
+  image={p.image}
+  type="article"
+  breadcrumbs={trail}
+  schema={[blogPostingSchema(Astro.site!, { title: p.title, description: p.description, date: p.date, path, image: coverUrl, author: p.author })]}
+>
+  <article>
+    <header class="wrap pb-12 pt-36 md:pb-16 md:pt-44">
+      <Breadcrumbs trail={trail} />
+      <div class="mt-10 max-w-4xl" data-stagger>
+        <p class="eyebrow" data-reveal>{p.category} · <time datetime={p.date.toISOString()}>{formatDate(p.date)}</time></p>
+        <h1 class="h1 mt-5" data-reveal>{p.title}</h1>
+        <p class="lede mt-7" data-reveal>{p.description}</p>
+        <p class="mt-6 text-sm text-muted" data-reveal>By {p.author}</p>
+      </div>
+    </header>
+
+    <div class="wrap pb-16">
+      <Photo src={cover} alt={p.imageAlt} ratio="16 / 9" priority widths={[768, 1280, 1920]} sizes="(min-width: 1280px) 1280px, 100vw" />
+    </div>
+
+    <div class="wrap-narrow pb-24 md:pb-32">
+      <div class="prose-lux !max-w-none text-[1.05rem]">
+        <Content />
+      </div>
+      <div class="mt-16 border-t border-line pt-8">
+        <a href="/blog" class="link-quiet">Back to the journal<span class="arrow" aria-hidden="true"></span></a>
+      </div>
+    </div>
+  </article>
+
+  <ClosingCta />
+</Base>

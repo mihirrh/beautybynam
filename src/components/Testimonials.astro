@@ -1,0 +1,45 @@
+---
+import { testimonials } from '../lib/site';
+
+interface Props {
+  /** Limit how many to show (home page). */
+  limit?: number;
+  /** "feature" = one large quote at a time layout; "list" = full page. */
+  variant?: 'feature' | 'list';
+}
+const { limit, variant = 'feature' } = Astro.props;
+const items = limit ? testimonials.items.slice(0, limit) : testimonials.items;
+---
+
+{
+  variant === 'feature' ? (
+    <div class="grid gap-14 md:grid-cols-2 md:gap-x-20 md:gap-y-20" data-stagger>
+      {items.map((t, i) => (
+        <figure class:list={['relative', i % 2 === 1 && 'md:mt-20']} data-reveal>
+          <span class="font-display text-7xl leading-none text-antique/50" aria-hidden="true">“</span>
+          <blockquote class="-mt-6 font-display text-[1.65rem] font-light leading-snug text-cream md:text-[1.9rem]">
+            <p>{t.quote}</p>
+          </blockquote>
+          <figcaption class="mt-6 text-sm tracking-[0.18em] uppercase text-antique">
+            {t.name}
+            {t.detail && <span class="block normal-case tracking-normal text-muted">{t.detail}</span>}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  ) : (
+    <ul class="divide-y divide-line border-y border-line" data-stagger>
+      {items.map((t) => (
+        <li class="grid gap-6 py-14 md:grid-cols-12 md:gap-10" data-reveal>
+          <div class="md:col-span-4">
+            <p class="eyebrow">{t.name}</p>
+            {t.detail && <p class="mt-2 text-sm text-muted">{t.detail}</p>}
+          </div>
+          <blockquote class="font-display text-2xl font-light leading-snug md:col-span-8 md:text-[2rem]">
+            <p>“{t.quote}”</p>
+          </blockquote>
+        </li>
+      ))}
+    </ul>
+  )
+}

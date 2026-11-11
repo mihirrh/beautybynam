@@ -1,0 +1,10 @@
+{
+  "items": [
+    { "image": "/src/assets/media/instagram/post-01.jpg", "alt": "Recent bridal makeup look shared on Instagram", "link": "" },
+    { "image": "/src/assets/media/instagram/post-02.jpg", "alt": "Recent bridal hair look shared on Instagram", "link": "" },
+    { "image": "/src/assets/media/instagram/post-03.jpg", "alt": "Recent occasion makeup look shared on Instagram", "link": "" },
+    { "image": "/src/assets/media/instagram/post-04.jpg", "alt": "Recent bridal detail shared on Instagram", "link": "" },
+    { "image": "/src/assets/media/instagram/post-05.jpg", "alt": "Recent wedding morning moment shared on Instagram", "link": "" },
+    { "image": "/src/assets/media/instagram/post-06.jpg", "alt": "Recent destination wedding look shared on Instagram", "link": "" }
+  ]
+}

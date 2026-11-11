@@ -1,0 +1,32 @@
+---
+import { home } from '../lib/site';
+import { media } from '../lib/media';
+import Photo from './Photo.astro';
+import GoldRing from './GoldRing.astro';
+
+const c = home.closingCta;
+---
+
+<section class="relative isolate overflow-hidden" aria-labelledby="closing-cta-heading">
+  <Photo
+    src={media(c.image)}
+    alt={c.imageAlt}
+    widths={[768, 1280, 1920]}
+    sizes="100vw"
+    reveal={false}
+    class="absolute inset-0 -z-20 !h-full opacity-60"
+  />
+  <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/70 to-ink/50"></div>
+
+  <div class="wrap relative grid place-items-center py-40 text-center md:py-52">
+    <GoldRing class="pointer-events-none absolute left-1/2 top-1/2 -z-0 h-[min(40rem,96vw)] w-[min(40rem,96vw)] -translate-x-1/2 -translate-y-1/2 opacity-70" />
+    <div class="relative max-w-[min(26rem,70vw)]" data-stagger>
+      <p class="eyebrow" data-reveal>{c.eyebrow}</p>
+      <h2 id="closing-cta-heading" class="h2 mt-5" data-reveal>{c.heading}</h2>
+      <p class="mx-auto mt-6 max-w-lg text-cream/80" data-reveal>{c.text}</p>
+      <div class="mt-10" data-reveal>
+        <a href="/contact" class="btn btn-primary">{c.buttonLabel}<span class="arrow" aria-hidden="true"></span></a>
+      </div>
+    </div>
+  </div>
+</section>

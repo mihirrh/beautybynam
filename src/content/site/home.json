@@ -1,0 +1,47 @@
+{
+  "hero": {
+    "eyebrow": "Bridal hair & makeup · Leicester",
+    "headline": "Bridal beauty, softly considered.",
+    "text": "Hair and makeup for brides in Leicester, Leicestershire and across the UK, created around your features, your dress and the way you want to feel when you walk in.",
+    "image": "/src/assets/media/hero/hero-bride.jpg",
+    "imageAlt": "Bride on her wedding morning with soft, polished makeup and styled hair",
+    "primaryCta": "Enquire About Your Wedding",
+    "secondaryCta": "Explore My Work"
+  },
+  "featured": {
+    "eyebrow": "Selected work",
+    "heading": "Looks from real wedding mornings",
+    "linkLabel": "View the full portfolio"
+  },
+  "aboutIntro": {
+    "eyebrow": "Meet Nam",
+    "heading": "A calm pair of hands on the most photographed morning of your life",
+    "text": "Beauty by Nam is a one-to-one service. You will talk to Nam from your first message to the final touch of hairspray, so nothing about your look is a surprise.\n\nShe works on the details that make a bride feel like herself: skin that still looks like skin, hair that holds through the speeches and a finish that photographs well.",
+    "image": "/src/assets/media/about/nam-portrait.jpg",
+    "imageAlt": "Nam, bridal hair and makeup artist, at work",
+    "linkLabel": "Read Nam's story"
+  },
+  "servicesIntro": {
+    "eyebrow": "Services",
+    "heading": "Hair and makeup, for the day and the days around it",
+    "text": "Every booking is quoted individually, so you only pay for the time and services you actually need."
+  },
+  "testimonialsIntro": {
+    "eyebrow": "Kind words",
+    "heading": "From the brides"
+  },
+  "instagram": {
+    "eyebrow": "On Instagram",
+    "heading": "Recent work, hand-picked",
+    "text": "A curated selection of looks from @beautybynamm. For the latest posts, stories and behind-the-scenes, follow along on Instagram.",
+    "buttonLabel": "Follow @beautybynamm"
+  },
+  "closingCta": {
+    "eyebrow": "Now booking weddings",
+    "heading": "Tell me about your day",
+    "text": "Share your date, your venue and a little about the look you have in mind. Nam will reply personally, usually with a few questions and a tailored quote.",
+    "buttonLabel": "Send a booking enquiry",
+    "image": "/src/assets/media/cta/closing-enquiry.jpg",
+    "imageAlt": "Soft evening light on a bridal dressing table"
+  }
+}
