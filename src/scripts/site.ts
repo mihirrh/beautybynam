@@ -57,7 +57,7 @@ if (toggle && menu) {
       first.focus();
     }
   });
-  window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => {
+  window.matchMedia('(min-width: 1280px)').addEventListener('change', (e) => {
     if (e.matches && toggle.getAttribute('aria-expanded') === 'true') setOpen(false);
   });
 }
@@ -72,21 +72,37 @@ if (motionOk) {
       () => {
         const parent = el.closest('[data-stagger]');
         const index = parent ? Array.from(parent.querySelectorAll('[data-reveal]')).indexOf(el) : 0;
-        animate(el, { opacity: [0, 1], y: [22, 0] }, { duration: 0.9, ease, delay: Math.min(index, 6) * 0.09 });
+        animate(el, { opacity: [0, 1], y: [26, 0] }, { duration: 1, ease, delay: Math.min(index, 6) * 0.1 });
       },
-      { amount: 0.25, margin: '0px 0px -8% 0px' },
+      { amount: 0.2, margin: '0px 0px -8% 0px' },
     );
   });
 
-  // Photographs: clip-path wipe with a slow settle on the image.
+  // Headlines: each word rises out of its own mask, left to right.
+  document.querySelectorAll<HTMLElement>('[data-words]').forEach((heading) => {
+    const words = heading.querySelectorAll<HTMLElement>('[data-word]');
+    const run = () => animate(words, { y: ['112%', '0%'] }, { duration: 1.1, ease, delay: stagger(0.07, { startDelay: Number(heading.dataset.delay ?? 0) }) });
+    if (heading.hasAttribute('data-onload')) run();
+    else inView(heading, () => void run(), { amount: 0.4 });
+  });
+
+  // Hero entrance on load (the photograph itself is already painted).
+  document.querySelectorAll<HTMLElement>('[data-fade]').forEach((el) => {
+    animate(el, { opacity: [0, 1], y: [18, 0] }, { duration: 1.1, ease, delay: 0.55 + Number(el.dataset.fade || 0) * 0.12 });
+  });
+  document.querySelectorAll<HTMLElement>('[data-hero-photo] img').forEach((img) => {
+    animate(img, { scale: [1.1, 1] }, { duration: 2.2, ease });
+  });
+
+  // Photographs: a soft wipe with a slow settle on the image.
   document.querySelectorAll<HTMLElement>('[data-reveal-img]').forEach((el) => {
     const img = el.querySelector('img');
     const pic = el.querySelector('picture') ?? el;
     inView(
       el,
       () => {
-        animate(pic, { clipPath: ['inset(0 0 100% 0)', 'inset(0 0 0% 0)'] }, { duration: 1.1, ease });
-        if (img) animate(img, { scale: [1.08, 1] }, { duration: 1.6, ease });
+        animate(pic, { clipPath: ['inset(0 0 100% 0)', 'inset(0 0 0% 0)'] }, { duration: 1.3, ease });
+        if (img && !el.hasAttribute('data-drift')) animate(img, { scale: [1.08, 1] }, { duration: 1.8, ease });
       },
       { amount: 0.15 },
     );
@@ -97,16 +113,83 @@ if (motionOk) {
     const path = svg.querySelector('path');
     if (!path) return;
     inView(svg, () => {
-      animate(path, { strokeDashoffset: [1, 0] }, { duration: 2.2, ease });
+      animate(path, { strokeDashoffset: [1, 0] }, { duration: 2.4, ease });
     });
   });
 
-  // Hero: a very small parallax on the photograph only.
-  const parallax = document.querySelector<HTMLElement>('[data-parallax]');
-  if (parallax) {
-    scroll(animate(parallax, { y: [0, 60] }, { ease: 'linear' }), {
-      target: parallax.parentElement as HTMLElement,
+  // Parallax. Hero: the whole frame lifts slowly as you scroll away.
+  document.querySelectorAll<HTMLElement>('[data-parallax]').forEach((el) => {
+    const speed = Number(el.dataset.parallax || 60);
+    scroll(animate(el, { y: [0, speed] }, { ease: 'linear' }), {
+      target: el.parentElement as HTMLElement,
       offset: ['start start', 'end start'],
     });
-  }
+  });
+  // Drift: the picture slides a few percent inside its fixed frame.
+  document.querySelectorAll<HTMLElement>('[data-drift]').forEach((frame) => {
+    const img = frame.querySelector('img');
+    if (!img) return;
+    scroll(animate(img, { y: ['-6%', '6%'] }, { ease: 'linear' }), { target: frame, offset: ['start end', 'end start'] });
+  });
+  // Floating pieces (e.g. the small overlapping photograph) move a little faster than the page.
+  document.querySelectorAll<HTMLElement>('[data-float]').forEach((el) => {
+    const amount = Number(el.dataset.float || 40);
+    scroll(animate(el, { y: [amount, -amount] }, { ease: 'linear' }), { target: el, offset: ['start end', 'end start'] });
+  });
 }
+
+/* ------------------------------------------------- instagram card stack */
+document.querySelectorAll<HTMLElement>('[data-cards]').forEach((root) => {
+  const track = root.querySelector<HTMLElement>('[data-track]');
+  const cards = Array.from(root.querySelectorAll<HTMLElement>('[data-card]'));
+  const prev = root.querySelector<HTMLButtonElement>('[data-prev]');
+  const next = root.querySelector<HTMLButtonElement>('[data-next]');
+  const count = root.querySelector<HTMLElement>('[data-count]');
+  const bar = root.querySelector<HTMLElement>('[data-bar]');
+  if (!track || cards.length === 0) return;
+
+  root.querySelectorAll<HTMLElement>('[data-controls]').forEach((c) => c.removeAttribute('hidden'));
+
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const box = track.getBoundingClientRect();
+    const mid = box.left + box.width / 2;
+    let nearest = 0;
+    let best = Infinity;
+    cards.forEach((card, i) => {
+      const r = card.getBoundingClientRect();
+      const offset = (r.left + r.width / 2 - mid) / box.width; // -1…1 around the centre
+      const d = Math.abs(offset);
+      if (d < best) {
+        best = d;
+        nearest = i;
+      }
+      if (motionOk) {
+        // The card in the middle sits upright and full size; its neighbours tuck back and tilt.
+        card.style.setProperty('--s', String(Math.max(0.9, 1 - d * 0.1)));
+        card.style.setProperty('--r', `${Math.max(-3, Math.min(3, offset * 3)).toFixed(2)}deg`);
+      }
+    });
+    if (count) count.textContent = `${String(nearest + 1).padStart(2, '0')} / ${String(cards.length).padStart(2, '0')}`;
+    const max = track.scrollWidth - track.clientWidth;
+    if (bar) bar.style.transform = `scaleX(${max > 0 ? Math.max(0.08, track.scrollLeft / max) : 1})`;
+    if (prev) prev.disabled = track.scrollLeft <= 2;
+    if (next) next.disabled = track.scrollLeft >= max - 2;
+  };
+  const queue = () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  };
+  const step = (dir: number) => {
+    const w = cards[0].getBoundingClientRect().width + 24;
+    track.scrollBy({ left: dir * w * (window.innerWidth > 900 ? 2 : 1), behavior: motionOk ? 'smooth' : 'auto' });
+  };
+  prev?.addEventListener('click', () => step(-1));
+  next?.addEventListener('click', () => step(1));
+  track.addEventListener('scroll', queue, { passive: true });
+  window.addEventListener('resize', queue);
+  update();
+});

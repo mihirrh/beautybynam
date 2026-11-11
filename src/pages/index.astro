@@ -8,6 +8,7 @@ import InstagramStrip from '../components/InstagramStrip.astro';
 import ClosingCta from '../components/ClosingCta.astro';
 import { home, gallery, testimonials, paragraphs } from '../lib/site';
 import { media } from '../lib/media';
+import { em, splitWords, plain } from '../lib/text';
 
 const hero = home.hero;
 const heroImage = media(hero.image);
@@ -17,61 +18,74 @@ const featured = gallery.items
   .filter((i) => i.featured)
   .slice(0, 5);
 
-// Editorial placement: a tall lead image, then a staggered supporting set.
+// Editorial placement: images overlap the grid's rhythm rather than sit in equal columns.
 const layout = [
-  'md:col-span-5 md:row-span-2',
   'md:col-span-7',
-  'md:col-span-4 md:mt-10',
-  'md:col-span-3 md:-mt-6',
-  'md:col-span-5 md:col-start-7',
+  'md:col-span-4 md:col-start-9 md:mt-44',
+  'md:col-span-4 md:col-start-2 md:mt-16',
+  'md:col-span-5 md:col-start-7 md:-mt-24',
+  'md:col-span-4 md:col-start-4 md:mt-4',
 ];
-const ratios = ['4 / 5.4', '3 / 2', '1 / 1', '3 / 4', '4 / 3'];
+const ratios = ['4 / 5', '3 / 4', '1 / 1', '4 / 3', '4 / 5'];
 ---
 
 <Base page="home" overlay includeBusiness image={hero.image}>
   <!-- ============================================================== HERO -->
-  <section class="relative isolate flex min-h-[100svh] items-end overflow-hidden" aria-labelledby="hero-heading">
-    <div class="absolute inset-0 -z-10" data-parallax>
-      <Photo
-        src={heroImage}
-        alt={hero.imageAlt}
-        priority
-        reveal={false}
-        widths={[640, 960, 1280, 1920, 2400]}
-        sizes="100vw"
-        class="!h-[112%] w-full"
-        position="50% 30%"
-      />
-    </div>
-    <!-- Soft vignette so the photograph stays the hero while the text stays legible. -->
-    <div class="absolute inset-0 -z-0 bg-gradient-to-t from-ink via-ink/35 to-ink/10"></div>
-    <div class="absolute inset-0 -z-0 bg-gradient-to-r from-ink/60 via-transparent to-transparent"></div>
-
-    <div class="wrap relative z-10 pb-16 pt-40 md:pb-24">
-      <div class="max-w-3xl" data-stagger>
-        <p class="eyebrow" data-reveal>{hero.eyebrow}</p>
-        <h1 id="hero-heading" class="display mt-6" data-reveal>{hero.headline}</h1>
-        <p class="lede mt-7 !text-cream/80" data-reveal>{hero.text}</p>
-        <div class="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8" data-reveal>
+  <!-- Pure ivory page. The photograph is the only image: a tall arch anchoring the right. -->
+  <section class="relative isolate overflow-x-clip bg-ivory" aria-labelledby="hero-heading">
+    <div class="wrap grid min-h-[100svh] items-center gap-16 pb-20 pt-36 xl:grid-cols-12 xl:gap-8 xl:pb-16 xl:pt-32">
+      <div class="xl:col-span-6 xl:pr-6">
+        <p class="eyebrow" data-fade="0">{hero.eyebrow}</p>
+        <h1 id="hero-heading" class="display-hero mt-10" data-words data-onload data-delay="0.25" set:html={splitWords(hero.headline)} />
+        <p class="lede mt-12" data-fade="3">{hero.text}</p>
+        <div class="mt-14 flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:gap-10" data-fade="4">
           <a href="/contact" class="btn btn-primary">{hero.primaryCta}<span class="arrow" aria-hidden="true"></span></a>
           <a href="/portfolio" class="link-quiet">{hero.secondaryCta}<span class="arrow" aria-hidden="true"></span></a>
+        </div>
+      </div>
+
+      <div class="relative xl:col-span-6 xl:justify-self-end xl:w-full">
+        <div class="relative mx-auto aspect-[4/5] w-[min(100%,28rem)] xl:ml-auto xl:mr-4 xl:w-[min(100%,calc(80svh*0.8),36rem)]" data-hero-photo>
+          <span class="arch-outline" aria-hidden="true"></span>
+          <Photo
+            src={heroImage}
+            alt={hero.imageAlt}
+            priority
+            reveal={false}
+            ratio="4 / 5"
+            widths={[480, 720, 960, 1280, 1600]}
+            sizes="(min-width: 1280px) 40vw, 90vw"
+            class="arch relative !h-full w-full"
+            position="50% 25%"
+          />
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ======================================================== STATEMENT -->
+  <section class="section" aria-label={plain(home.statement.eyebrow)}>
+    <div class="wrap grid gap-10 md:grid-cols-12">
+      <p class="eyebrow md:col-span-3 md:pt-4" data-reveal>{home.statement.eyebrow}</p>
+      <div class="md:col-span-8 md:col-start-5" data-stagger>
+        <p class="statement" data-reveal set:html={em(home.statement.text)} />
+        <a href="/about" class="link-quiet mt-12" data-reveal>{home.statement.linkLabel}<span class="arrow" aria-hidden="true"></span></a>
+      </div>
+    </div>
+  </section>
+
   <!-- ========================================================= FEATURED -->
-  <section class="section" aria-labelledby="featured-heading">
+  <section class="pb-[var(--section)]" aria-labelledby="featured-heading">
     <div class="wrap">
       <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div data-stagger>
           <p class="eyebrow" data-reveal>{home.featured.eyebrow}</p>
-          <h2 id="featured-heading" class="h2 mt-4 max-w-xl" data-reveal>{home.featured.heading}</h2>
+          <h2 id="featured-heading" class="h2 mt-5 max-w-2xl" data-reveal set:html={em(home.featured.heading)} />
         </div>
         <a href="/portfolio" class="link-quiet self-start md:self-auto" data-reveal>{home.featured.linkLabel}<span class="arrow" aria-hidden="true"></span></a>
       </div>
 
-      <ul class="mt-14 grid gap-5 md:grid-cols-12 md:gap-6">
+      <ul class="mt-20 grid gap-14 md:grid-cols-12 md:gap-x-8 md:gap-y-0">
         {featured.map((item, i) => (
           <li class={layout[i]}>
             <a href={`/portfolio#photo-${item.index}`} class="group block" aria-label={`View portfolio: ${item.caption}`}>
@@ -80,10 +94,11 @@ const ratios = ['4 / 5.4', '3 / 2', '1 / 1', '3 / 4', '4 / 3'];
                 alt={item.alt}
                 ratio={ratios[i]}
                 zoom
-                keyline={i === 0}
-                sizes={i === 0 ? '(min-width: 768px) 40vw, 100vw' : '(min-width: 768px) 45vw, 100vw'}
+                drift={i === 0}
+                keyline={i === 2}
+                sizes={i === 0 ? '(min-width: 768px) 55vw, 100vw' : '(min-width: 768px) 40vw, 100vw'}
               />
-              <p class="mt-3 text-sm tracking-wide text-muted transition-colors group-hover:text-champagne">{item.caption}</p>
+              <p class="mt-4 text-sm tracking-wide text-muted transition-colors group-hover:text-gold-deep">{item.caption}</p>
             </a>
           </li>
         ))}
@@ -92,25 +107,36 @@ const ratios = ['4 / 5.4', '3 / 2', '1 / 1', '3 / 4', '4 / 3'];
   </section>
 
   <!-- ============================================================ ABOUT -->
-  <section class="section surface-2" aria-labelledby="about-heading">
-    <div class="wrap grid items-center gap-14 md:grid-cols-12 md:gap-8">
-      <div class="relative md:col-span-5 md:col-start-1">
-        <GoldRing class="pointer-events-none absolute -left-10 -top-10 z-0 h-[115%] w-[115%] max-w-none opacity-80" />
+  <section class="section surface-2 overflow-x-clip" aria-labelledby="about-heading">
+    <div class="wrap grid items-center gap-20 md:grid-cols-12 md:gap-8">
+      <div class="relative md:col-span-5">
+        <GoldRing class="pointer-events-none absolute -left-14 -top-12 z-0 h-[120%] w-[120%] max-w-none opacity-90" />
         <Photo
           src={media(home.aboutIntro.image)}
           alt={home.aboutIntro.imageAlt}
           ratio="4 / 5"
+          drift
           class="relative z-10"
           sizes="(min-width: 768px) 40vw, 100vw"
         />
+        <div class="absolute -bottom-10 right-[-12%] z-20 hidden w-[42%] md:block" data-float="22">
+          <Photo
+            src={media(home.hero.detailImage)}
+            alt={home.hero.detailImageAlt}
+            ratio="1 / 1"
+            keyline
+            widths={[320, 480]}
+            sizes="14vw"
+          />
+        </div>
       </div>
       <div class="md:col-span-6 md:col-start-7" data-stagger>
         <p class="eyebrow" data-reveal>{home.aboutIntro.eyebrow}</p>
-        <h2 id="about-heading" class="h2 mt-4" data-reveal>{home.aboutIntro.heading}</h2>
-        <div class="prose-lux mt-8" data-reveal>
+        <h2 id="about-heading" class="h2 mt-5" data-reveal set:html={em(home.aboutIntro.heading)} />
+        <div class="prose-lux drop mt-10" data-reveal>
           {paragraphs(home.aboutIntro.text).map((p) => <p>{p}</p>)}
         </div>
-        <p class="script mt-8" data-reveal aria-hidden="true">Nam</p>
+        <p class="script mt-10" data-reveal aria-hidden="true">Nam</p>
         <a href="/about" class="link-quiet mt-6" data-reveal>{home.aboutIntro.linkLabel}<span class="arrow" aria-hidden="true"></span></a>
       </div>
     </div>
@@ -119,25 +145,25 @@ const ratios = ['4 / 5.4', '3 / 2', '1 / 1', '3 / 4', '4 / 3'];
   <!-- ========================================================== SERVICES -->
   <section class="section" aria-labelledby="services-heading">
     <div class="wrap">
-      <div class="grid gap-8 md:grid-cols-12">
-        <div class="md:col-span-6" data-stagger>
+      <div class="grid gap-10 md:grid-cols-12">
+        <div class="md:col-span-7" data-stagger>
           <p class="eyebrow" data-reveal>{home.servicesIntro.eyebrow}</p>
-          <h2 id="services-heading" class="h2 mt-4" data-reveal>{home.servicesIntro.heading}</h2>
+          <h2 id="services-heading" class="h2 mt-5" data-reveal set:html={em(home.servicesIntro.heading)} />
         </div>
         <p class="text-muted md:col-span-4 md:col-start-9 md:self-end" data-reveal>{home.servicesIntro.text}</p>
       </div>
 
-      <ol class="mt-16 border-t border-line">
+      <ol class="mt-20 border-t border-line">
         {services.map((s, i) => (
           <li class="border-b border-line">
             <a
               href={`/services/${s.id}`}
-              class="group grid items-center gap-6 py-9 md:grid-cols-12 md:gap-8 md:py-12"
+              class="group grid items-center gap-6 py-10 md:grid-cols-12 md:gap-8 md:py-14"
               data-reveal
             >
-              <span class="font-display text-2xl text-antique md:col-span-1">{String(i + 1).padStart(2, '0')}</span>
+              <span class="font-display text-2xl italic text-gold-deep md:col-span-1">{String(i + 1).padStart(2, '0')}</span>
               <div class="md:col-span-5">
-                <h3 class="h3 transition-colors group-hover:text-champagne">{s.data.title}</h3>
+                <h3 class="h3 transition-[padding] duration-700 group-hover:md:pl-3">{s.data.title}</h3>
               </div>
               <p class="max-w-md text-muted md:col-span-4">{s.data.summary}</p>
               <div class="hidden md:col-span-2 md:block">
@@ -148,14 +174,14 @@ const ratios = ['4 / 5.4', '3 / 2', '1 / 1', '3 / 4', '4 / 3'];
                   reveal={false}
                   widths={[240, 400]}
                   sizes="12vw"
-                  class="w-24 translate-y-1 opacity-70 grayscale-[40%] transition duration-700 group-hover:opacity-100 group-hover:grayscale-0 md:ml-auto"
+                  class="w-24 opacity-80 transition duration-700 group-hover:-translate-y-1 group-hover:opacity-100 md:ml-auto"
                 />
               </div>
             </a>
           </li>
         ))}
       </ol>
-      <div class="mt-10">
+      <div class="mt-12">
         <a href="/services" class="link-quiet">All services<span class="arrow" aria-hidden="true"></span></a>
       </div>
     </div>
@@ -166,14 +192,14 @@ const ratios = ['4 / 5.4', '3 / 2', '1 / 1', '3 / 4', '4 / 3'];
     <div class="wrap">
       <div data-stagger>
         <p class="eyebrow" data-reveal>{home.testimonialsIntro.eyebrow}</p>
-        <h2 id="testimonials-heading" class="h2 mt-4" data-reveal>{home.testimonialsIntro.heading}</h2>
+        <h2 id="testimonials-heading" class="h2 mt-5" data-reveal set:html={em(home.testimonialsIntro.heading)} />
       </div>
-      <div class="mt-14">
+      <div class="mt-16">
         {
           testimonials.items.length > 0 ? (
             <>
               <Testimonials limit={4} />
-              <div class="mt-14">
+              <div class="mt-16">
                 <a href="/testimonials" class="link-quiet">Read more reviews<span class="arrow" aria-hidden="true"></span></a>
               </div>
             </>

@@ -18,7 +18,7 @@ export function businessSchema(site: URL | string, image?: string): Json {
     name: settings.businessName,
     url: abs(site),
     description:
-      'Bridal and occasion hair and makeup artist based in Leicester, serving Leicestershire, the East Midlands and destination weddings across the UK.',
+      'Bridal and occasion hair and makeup studio based in Leicester, serving Leicestershire, the East Midlands and destination weddings across the UK.',
     areaServed: settings.areaServed.map((name) => ({ '@type': 'Place', name })),
     address: {
       '@type': 'PostalAddress',

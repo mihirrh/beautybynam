@@ -1,0 +1,16 @@
+---
+/**
+ * Gentle rise-and-fade when the element scrolls into view.
+ * A thin wrapper over the data-reveal hook handled by src/scripts/site.ts (Motion's
+ * animate + inView, soft cubic-bezier 0.22/0.7/0.2/1). Content stays visible with
+ * JavaScript off or prefers-reduced-motion, because the hidden start state is only
+ * applied once the page has decided that motion is allowed.
+ */
+interface Props {
+  as?: keyof HTMLElementTagNameMap;
+  class?: string;
+}
+const { as: Tag = 'div', class: className } = Astro.props;
+---
+
+<Tag class={className} data-reveal><slot /></Tag>

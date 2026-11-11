@@ -41,7 +41,6 @@ export interface Branding {
   thankYou: string;
   /** e.g. email, phone, Instagram. Only facts that exist. */
   contactLines: string[];
-  termsUrl: string;
 }
 
 export interface PdfAssets {
@@ -50,9 +49,7 @@ export interface PdfAssets {
   sans: Uint8Array;
   sansMedium: Uint8Array;
   script: Uint8Array;
-  /** Logo on a cream disc, for the dark cover. */
-  seal: Uint8Array;
-  /** Transparent logo with dark script, for white pages. */
+  /** Transparent PNG logo. Drawn straight onto the page, so it blends with any background. */
   logo: Uint8Array;
 }
 
@@ -110,13 +107,10 @@ const addDays = (iso: string, days: number) => {
 };
 
 /* Palette (matches the website). */
-const INK = '#080808';
-const CREAM = '#F7F3EC';
-const MUTED_ON_DARK = '#B8B1A5';
-const CHAMPAGNE = '#E8D7B5';
+const IVORY = '#FDFCF0';
 const GOLD = '#A8884F';
-const TEXT = '#1F1B16';
-const MUTED = '#6B645A';
+const TEXT = '#1A1A1A';
+const MUTED = '#5F584D';
 const RULE = '#D9CCB2';
 
 const PAGE_W = 595.28;
@@ -155,12 +149,14 @@ export async function buildQuotePdf(data: QuoteData, brand: Branding, assets: Pd
   doc.registerFont('Script', assets.script);
 
   /* =================================================================== COVER */
-  doc.rect(0, 0, PAGE_W, PAGE_H).fill(INK);
+  doc.rect(0, 0, PAGE_W, PAGE_H).fill(IVORY);
+  doc.rect(0, 0, PAGE_W, 5).fill('#C9A96E');
 
-  const seal = 138;
-  doc.image(assets.seal as unknown as ArrayBuffer, (PAGE_W - seal) / 2, 84, { width: seal });
+  // The logo is transparent, so it sits directly on the ivory page: no disc, no box.
+  const logoW = 250;
+  doc.image(assets.logo as unknown as ArrayBuffer, (PAGE_W - logoW) / 2, 64, { width: logoW });
 
-  let y = 84 + seal + 54;
+  let y = 64 + logoW * (936 / 1200) + 40;
   const eyebrow = (text: string, yy: number, color = GOLD) => {
     doc.font('SansMedium').fontSize(7.5).fillColor(color).text(text.toUpperCase(), M, yy, {
       width: CONTENT_W,
@@ -169,14 +165,14 @@ export async function buildQuotePdf(data: QuoteData, brand: Branding, assets: Pd
     });
   };
 
-  eyebrow('About', y, '#C9A96E');
+  eyebrow('About us', y, GOLD);
   y += 22;
-  doc.font('Display').fontSize(28).fillColor(CREAM).text(`About ${brand.businessName}`, M + 30, y, {
+  doc.font('Display').fontSize(28).fillColor(TEXT).text(`A little about us`, M + 30, y, {
     width: CONTENT_W - 60,
     align: 'center',
   });
   y = doc.y + 18;
-  doc.font('Sans').fontSize(10.5).fillColor(MUTED_ON_DARK).text(brand.about, M + 50, y, {
+  doc.font('Sans').fontSize(10.5).fillColor(MUTED).text(brand.about, M + 50, y, {
     width: CONTENT_W - 100,
     align: 'center',
     lineGap: 4.5,
@@ -184,12 +180,12 @@ export async function buildQuotePdf(data: QuoteData, brand: Branding, assets: Pd
   y = doc.y + 38;
 
   // Fine gold divider.
-  doc.moveTo(PAGE_W / 2 - 28, y).lineTo(PAGE_W / 2 + 28, y).lineWidth(0.7).strokeColor('#C9A96E').stroke();
+  doc.moveTo(PAGE_W / 2 - 28, y).lineTo(PAGE_W / 2 + 28, y).lineWidth(0.7).strokeColor(GOLD).stroke();
   y += 26;
 
-  doc.font('Script').fontSize(40).fillColor(CHAMPAGNE).text('Thank you', M, y, { width: CONTENT_W, align: 'center' });
+  doc.font('Script').fontSize(40).fillColor(GOLD).text('Thank you', M, y, { width: CONTENT_W, align: 'center' });
   y = doc.y + 8;
-  doc.font('DisplayItalic').fontSize(14.5).fillColor(CREAM).text(brand.thankYou, M + 50, y, {
+  doc.font('DisplayItalic').fontSize(14.5).fillColor(TEXT).text(brand.thankYou, M + 50, y, {
     width: CONTENT_W - 100,
     align: 'center',
     lineGap: 4,
@@ -197,10 +193,10 @@ export async function buildQuotePdf(data: QuoteData, brand: Branding, assets: Pd
 
   // Prepared-for line anchored to the bottom of the cover.
   const coverFooterY = PAGE_H - 92;
-  doc.moveTo(M, coverFooterY - 14).lineTo(PAGE_W - M, coverFooterY - 14).lineWidth(0.5).strokeColor('#4a4132').stroke();
-  doc.font('SansMedium').fontSize(7.5).fillColor('#C9A96E').text('PREPARED FOR', M, coverFooterY, { characterSpacing: 2.5 });
-  doc.font('Display').fontSize(17).fillColor(CREAM).text(data.customer.name, M, coverFooterY + 14, { width: 300 });
-  doc.font('Sans').fontSize(8.5).fillColor(MUTED_ON_DARK);
+  doc.moveTo(M, coverFooterY - 14).lineTo(PAGE_W - M, coverFooterY - 14).lineWidth(0.5).strokeColor(RULE).stroke();
+  doc.font('SansMedium').fontSize(7.5).fillColor(GOLD).text('PREPARED FOR', M, coverFooterY, { characterSpacing: 2.5 });
+  doc.font('Display').fontSize(17).fillColor(TEXT).text(data.customer.name, M, coverFooterY + 14, { width: 300 });
+  doc.font('Sans').fontSize(8.5).fillColor(MUTED);
   doc.text(`Quotation ${data.reference}`, PAGE_W - M - 220, coverFooterY, { width: 220, align: 'right' });
   doc.text(longDate(data.issueDate), PAGE_W - M - 220, coverFooterY + 14, { width: 220, align: 'right' });
 
@@ -368,7 +364,7 @@ export async function buildQuotePdf(data: QuoteData, brand: Branding, assets: Pd
   block('Key terms', data.terms.filter(Boolean), true);
 
   ensure(40);
-  doc.font('Sans').fontSize(8.5).fillColor(MUTED).text(`The full terms and conditions are available at ${brand.termsUrl}. Travel costs are charged in addition to the service prices where shown.`, M, y, {
+  doc.font('Sans').fontSize(8.5).fillColor(MUTED).text('Our full terms and conditions can be found on our website. Travel costs are charged in addition to the service prices where shown.', M, y, {
     width: CONTENT_W,
     lineGap: 2,
   });

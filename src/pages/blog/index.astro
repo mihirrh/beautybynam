@@ -20,15 +20,15 @@ const [lead, ...rest] = posts;
 <Base page="blog" breadcrumbs={trail} image={lead?.data.image}>
   <PageHeader
     eyebrow="Journal"
-    title="Bridal beauty, thoughtfully explained"
-    intro="Practical advice on skincare, timings and makeup for your wedding, from a Leicester hair and makeup artist."
+    title="Bridal beauty, *thoughtfully* explained"
+    intro="Practical advice on skincare, timings and makeup for your wedding, shared from our Leicester studio."
     trail={trail}
   />
 
-  <section class="pb-24 md:pb-36" aria-label="Journal articles">
+  <section class="pb-28 md:pb-44" aria-label="Journal articles">
     <div class="wrap">
       {
-        posts.length === 0 && <p class="text-muted">New articles are on their way.</p>
+        posts.length === 0 && <p class="text-muted">We are writing our first articles. Please check back soon.</p>
       }
       {
         lead && (
@@ -38,7 +38,7 @@ const [lead, ...rest] = posts;
             </a>
             <div class="md:col-span-4 md:col-start-9" data-stagger>
               <p class="eyebrow" data-reveal>{lead.data.category} · {formatDate(lead.data.date)}</p>
-              <h2 class="h2 mt-4" data-reveal><a href={`/blog/${lead.id}`} class="hover:text-champagne">{lead.data.title}</a></h2>
+              <h2 class="h2 mt-4" data-reveal><a href={`/blog/${lead.id}`} class="hover:text-gold-deep">{lead.data.title}</a></h2>
               <p class="mt-5 text-muted" data-reveal>{lead.data.description}</p>
               <a href={`/blog/${lead.id}`} class="link-quiet mt-8" data-reveal>Read the article<span class="arrow" aria-hidden="true"></span></a>
             </div>
@@ -47,15 +47,15 @@ const [lead, ...rest] = posts;
       }
       {
         rest.length > 0 && (
-          <ul class="mt-24 grid gap-14 md:grid-cols-2 md:gap-12">
+          <ul class="mt-28 grid gap-16 md:grid-cols-2 md:gap-16">
             {rest.map((p) => (
-              <li>
+              <li class="md:even:mt-24">
                 <article>
                   <a href={`/blog/${p.id}`} class="block" tabindex="-1" aria-hidden="true">
                     <Photo src={media(p.data.image)} alt="" ratio="3 / 2" zoom sizes="(min-width: 768px) 46vw, 100vw" />
                   </a>
                   <p class="eyebrow mt-6">{p.data.category} · {formatDate(p.data.date)}</p>
-                  <h2 class="h3 mt-3"><a href={`/blog/${p.id}`} class="hover:text-champagne">{p.data.title}</a></h2>
+                  <h2 class="h3 mt-3"><a href={`/blog/${p.id}`} class="hover:text-gold-deep">{p.data.title}</a></h2>
                   <p class="mt-3 text-muted">{p.data.description}</p>
                 </article>
               </li>

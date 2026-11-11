@@ -1,47 +1,54 @@
 {
   "hero": {
     "eyebrow": "Bridal hair & makeup · Leicester",
-    "headline": "Bridal beauty, softly considered.",
-    "text": "Hair and makeup for brides in Leicester, Leicestershire and across the UK, created around your features, your dress and the way you want to feel when you walk in.",
+    "headline": "Beautifully, *unmistakably* you.",
+    "text": "We create hair and makeup for brides in Leicester, Leicestershire and across the UK. Tell us how you want to feel on the day, and we will take care of the rest.",
     "image": "/src/assets/media/hero/hero-bride.jpg",
     "imageAlt": "Bride on her wedding morning with soft, polished makeup and styled hair",
-    "primaryCta": "Enquire About Your Wedding",
-    "secondaryCta": "Explore My Work"
+    "detailImage": "/src/assets/media/hero/hero-detail.jpg",
+    "detailImageAlt": "Close detail of a bridal hairstyle with a pearl hair pin",
+    "primaryCta": "Enquire about your wedding",
+    "secondaryCta": "Explore our work"
+  },
+  "statement": {
+    "eyebrow": "How we work",
+    "text": "We believe a bride should look in the mirror and see *herself*: calmer, brighter and ready for the day ahead.",
+    "linkLabel": "Read our story"
   },
   "featured": {
     "eyebrow": "Selected work",
-    "heading": "Looks from real wedding mornings",
-    "linkLabel": "View the full portfolio"
+    "heading": "A few of our *favourite* looks",
+    "linkLabel": "See the full portfolio"
   },
   "aboutIntro": {
-    "eyebrow": "Meet Nam",
-    "heading": "A calm pair of hands on the most photographed morning of your life",
-    "text": "Beauty by Nam is a one-to-one service. You will talk to Nam from your first message to the final touch of hairspray, so nothing about your look is a surprise.\n\nShe works on the details that make a bride feel like herself: skin that still looks like skin, hair that holds through the speeches and a finish that photographs well.",
+    "eyebrow": "Hello, and welcome",
+    "heading": "A calm pair of hands for the *morning that matters*",
+    "text": "We keep things personal. From your first message to the last pin in place, we want you to feel looked after and never rushed.\n\nWe care about the small things that make a bride feel like herself: skin that still looks like skin, hair that holds through the speeches and a finish that photographs beautifully.",
     "image": "/src/assets/media/about/nam-portrait.jpg",
     "imageAlt": "Nam, bridal hair and makeup artist, at work",
-    "linkLabel": "Read Nam's story"
+    "linkLabel": "More about us"
   },
   "servicesIntro": {
-    "eyebrow": "Services",
-    "heading": "Hair and makeup, for the day and the days around it",
+    "eyebrow": "What we do",
+    "heading": "Hair and makeup, for the day and the days *around it*",
     "text": "Every booking is quoted individually, so you only pay for the time and services you actually need."
   },
   "testimonialsIntro": {
     "eyebrow": "Kind words",
-    "heading": "From the brides"
+    "heading": "From our *brides*"
   },
   "instagram": {
     "eyebrow": "On Instagram",
-    "heading": "Recent work, hand-picked",
-    "text": "A curated selection of looks from @beautybynamm. For the latest posts, stories and behind-the-scenes, follow along on Instagram.",
+    "heading": "Fresh from *our feed*",
+    "text": "A hand-picked selection of recent looks and reels from @beautybynamm. Swipe through them here, then follow along for the latest posts, stories and behind-the-scenes.",
     "buttonLabel": "Follow @beautybynamm"
   },
   "closingCta": {
     "eyebrow": "Now booking weddings",
-    "heading": "Tell me about your day",
-    "text": "Share your date, your venue and a little about the look you have in mind. Nam will reply personally, usually with a few questions and a tailored quote.",
+    "heading": "Tell us about *your day*",
+    "text": "Share your date, your venue and a little about the look you have in mind. We will reply personally, usually with a few questions and a tailored quote.",
     "buttonLabel": "Send a booking enquiry",
     "image": "/src/assets/media/cta/closing-enquiry.jpg",
-    "imageAlt": "Soft evening light on a bridal dressing table"
+    "imageAlt": "Soft morning light on a bridal dressing table"
   }
 }

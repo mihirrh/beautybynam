@@ -29,6 +29,18 @@ export const categories = [
   { value: 'destination', label: 'Destination' },
 ] as const;
 
+/**
+ * Internal URLs never end in a slash ("/services"), matching trailingSlash: 'never'.
+ * Query strings and #fragments are preserved, "/" stays "/", and external or file
+ * paths are left alone. Used for anything an editor can type in the CMS.
+ */
+export function cleanHref(href: string): string {
+  if (!href.startsWith('/') || href.startsWith('//')) return href;
+  const m = href.match(/^([^?#]*)(.*)$/)!;
+  const path = m[1].replace(/\/+$/, '') || '/';
+  return `${path}${m[2]}`;
+}
+
 /** Splits a multi-paragraph CMS text field into paragraphs. */
 export const paragraphs = (text: string) =>
   text

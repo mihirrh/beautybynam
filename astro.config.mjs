@@ -10,8 +10,10 @@ const SITE = process.env.SITE_URL ?? 'https://beautybynam.pages.dev';
 export default defineConfig({
   site: SITE,
   output: 'static',
+  // Cloudflare Pages serves /about/index.html at /about (no slash, no .html). Every internal
+  // link is written without a trailing slash, so there is exactly one URL per page.
   trailingSlash: 'never',
-  build: { format: 'file' },
+  build: { format: 'directory' },
   compressHTML: true,
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
   integrations: [

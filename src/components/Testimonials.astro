@@ -16,11 +16,11 @@ const items = limit ? testimonials.items.slice(0, limit) : testimonials.items;
     <div class="grid gap-14 md:grid-cols-2 md:gap-x-20 md:gap-y-20" data-stagger>
       {items.map((t, i) => (
         <figure class:list={['relative', i % 2 === 1 && 'md:mt-20']} data-reveal>
-          <span class="font-display text-7xl leading-none text-antique/50" aria-hidden="true">“</span>
-          <blockquote class="-mt-6 font-display text-[1.65rem] font-light leading-snug text-cream md:text-[1.9rem]">
+          <span class="font-display text-7xl leading-none text-gold/70" aria-hidden="true">“</span>
+          <blockquote class="-mt-6 font-display text-[1.65rem] font-light leading-snug text-ink md:text-[1.9rem]">
             <p>{t.quote}</p>
           </blockquote>
-          <figcaption class="mt-6 text-sm tracking-[0.18em] uppercase text-antique">
+          <figcaption class="mt-6 text-sm tracking-[0.18em] uppercase text-gold-deep">
             {t.name}
             {t.detail && <span class="block normal-case tracking-normal text-muted">{t.detail}</span>}
           </figcaption>

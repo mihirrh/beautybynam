@@ -8,6 +8,7 @@ import FaqList from '../../components/FaqList.astro';
 import { home, has, faqs } from '../../lib/site';
 import { media } from '../../lib/media';
 import { faqSchema } from '../../lib/schema';
+import { em } from '../../lib/text';
 
 const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
 const trail = [
@@ -25,26 +26,26 @@ const trail = [
   />
 
   <section class="pb-24 md:pb-36" aria-label="Services">
-    <div class="wrap space-y-24 md:space-y-36">
+    <div class="wrap space-y-28 md:space-y-48">
       {services.map((s, i) => (
         <article class="grid items-center gap-10 md:grid-cols-12 md:gap-8">
-          <div class:list={['md:col-span-6', i % 2 === 1 ? 'md:order-2 md:col-start-7' : 'md:col-start-1']}>
+          <div class:list={['md:col-span-6', i % 2 === 1 ? 'md:order-2 md:col-start-7' : 'md:col-start-1 md:-ml-6']}>
             <a href={`/services/${s.id}`} tabindex="-1" aria-hidden="true">
               <Photo
                 src={media(s.data.image)}
                 alt=""
                 ratio={i % 2 === 0 ? '4 / 5' : '5 / 4'}
                 zoom
-                keyline={i === 0}
+                keyline={i % 2 === 0}
                 sizes="(min-width: 768px) 48vw, 100vw"
               />
             </a>
           </div>
           <div class:list={['md:col-span-5', i % 2 === 1 ? 'md:order-1 md:col-start-1' : 'md:col-start-8']} data-stagger>
-            <span class="font-display text-3xl text-antique" data-reveal>{String(i + 1).padStart(2, '0')}</span>
-            <h2 class="h2 mt-4" data-reveal><a href={`/services/${s.id}`} class="hover:text-champagne">{s.data.title}</a></h2>
+            <span class="font-display text-3xl italic text-gold-deep" data-reveal>{String(i + 1).padStart(2, '0')}</span>
+            <h2 class="h2 mt-5" data-reveal><a href={`/services/${s.id}`} class="hover:text-gold-deep">{s.data.title}</a></h2>
             <p class="mt-6 text-muted" data-reveal>{s.data.summary}</p>
-            {has(s.data.priceFrom) && <p class="mt-5 text-champagne" data-reveal>{s.data.priceFrom}</p>}
+            {has(s.data.priceFrom) && <p class="mt-5 text-gold-deep" data-reveal>{s.data.priceFrom}</p>}
             <div class="mt-8" data-reveal>
               <a href={`/services/${s.id}`} class="link-quiet">
                 About {s.data.title.toLowerCase()}<span class="arrow" aria-hidden="true"></span>
@@ -58,7 +59,7 @@ const trail = [
 
   <section class="section surface-2" aria-labelledby="faq-heading">
     <div class="wrap grid gap-10 md:grid-cols-12 md:gap-8">
-      <h2 id="faq-heading" class="h2 md:col-span-4">{faqs.heading}</h2>
+      <h2 id="faq-heading" class="h2 md:col-span-4" set:html={em(faqs.heading)} />
       <div class="md:col-span-7 md:col-start-6"><FaqList /></div>
     </div>
   </section>

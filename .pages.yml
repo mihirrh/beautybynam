@@ -27,13 +27,6 @@ content:
         type: string
         required: true
         default: Beauty by Nam
-      - name: tagline
-        label: Header tagline
-        description: Small line of text under the logo in the header.
-        type: string
-        required: true
-        default: Hair · Makeup · Beauty
-        options: { maxlength: 40 }
       - name: email
         label: Email address
         description: Shown in the footer and on the contact page. Leave blank to hide it everywhere, including search engine data.
@@ -93,7 +86,7 @@ content:
             options: { maxlength: 24 }
           - name: href
             label: Page address
-            description: For example /portfolio. Internal pages only.
+            description: For example /portfolio (no trailing slash). Internal pages only.
             type: string
             required: true
             pattern:
@@ -195,6 +188,7 @@ content:
           - name: headline
             label: Headline
             type: string
+            description: Put *asterisks* around a word or two to set them in italic gold, for example “Beautifully, *unmistakably* you.”
             required: true
             options: { maxlength: 80 }
           - name: text
@@ -204,7 +198,7 @@ content:
             options: { maxlength: 260 }
           - name: image
             label: Hero photograph
-            description: Landscape or portrait works, but choose your strongest bridal image. At least 2400 pixels wide.
+            description: Shown in a tall arch beside the headline. Use a portrait photograph (4:5 works best, at least 1600 pixels wide).
             type: image
             required: true
             options:
@@ -212,6 +206,17 @@ content:
           - name: imageAlt
             label: Photograph description (alt text)
             description: Describe what is in the photograph for people using screen readers and for search engines.
+            type: string
+            required: true
+          - name: detailImage
+            label: Small detail photograph (About section)
+            description: A close-up (hair detail, lashes, a pin) shown overlapping the About photograph further down the home page. Square or portrait works best.
+            type: image
+            required: true
+            options:
+              path: src/assets/media/hero
+          - name: detailImageAlt
+            label: Detail photograph description (alt text)
             type: string
             required: true
           - name: primaryCta
@@ -224,20 +229,28 @@ content:
             type: string
             required: true
             options: { maxlength: 36 }
+      - name: statement
+        label: Opening statement
+        description: A single large sentence under the hero. Use *asterisks* for italic gold.
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line beside the statement, type: string, required: true }
+          - { name: text, label: Statement, type: text, required: true, options: { maxlength: 200 } }
+          - { name: linkLabel, label: Link text to the About page, type: string, required: true }
       - name: featured
         label: Featured work heading
         description: The images themselves are chosen in “Portfolio gallery” by ticking “Show on home page”.
         type: object
         fields:
           - { name: eyebrow, label: Small line above the heading, type: string, required: true }
-          - { name: heading, label: Heading, type: string, required: true }
+          - { name: heading, label: Heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
           - { name: linkLabel, label: Link text to the portfolio, type: string, required: true }
       - name: aboutIntro
         label: About introduction
         type: object
         fields:
           - { name: eyebrow, label: Small line above the heading, type: string, required: true }
-          - { name: heading, label: Heading, type: string, required: true }
+          - { name: heading, label: Heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
           - name: text
             label: Text
             description: Leave a blank line between paragraphs.
@@ -256,7 +269,7 @@ content:
         type: object
         fields:
           - { name: eyebrow, label: Small line above the heading, type: string, required: true }
-          - { name: heading, label: Heading, type: string, required: true }
+          - { name: heading, label: Heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
           - { name: text, label: Text, type: text, required: true }
       - name: testimonialsIntro
         label: Testimonials heading
@@ -264,14 +277,14 @@ content:
         type: object
         fields:
           - { name: eyebrow, label: Small line above the heading, type: string, required: true }
-          - { name: heading, label: Heading, type: string, required: true }
+          - { name: heading, label: Heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
       - name: instagram
         label: Instagram section
         description: The pictures are chosen in “Instagram gallery”.
         type: object
         fields:
           - { name: eyebrow, label: Small line above the heading, type: string, required: true }
-          - { name: heading, label: Heading, type: string, required: true }
+          - { name: heading, label: Heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
           - { name: text, label: Text, type: text, required: true }
           - { name: buttonLabel, label: Button text, type: string, required: true }
       - name: closingCta
@@ -279,7 +292,7 @@ content:
         type: object
         fields:
           - { name: eyebrow, label: Small line above the heading, type: string, required: true }
-          - { name: heading, label: Heading, type: string, required: true }
+          - { name: heading, label: Heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
           - { name: text, label: Text, type: text, required: true }
           - { name: buttonLabel, label: Button text, type: string, required: true }
           - name: image
@@ -296,7 +309,7 @@ content:
     format: json
     fields:
       - { name: eyebrow, label: Small line above the heading, type: string, required: true }
-      - { name: heading, label: Heading, type: string, required: true }
+      - { name: heading, label: Heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
       - { name: intro, label: Introduction, type: text, required: true }
       - name: portrait
         label: Portrait of Nam
@@ -309,7 +322,7 @@ content:
         description: Leave a blank line between paragraphs.
         type: text
         required: true
-      - { name: philosophyHeading, label: Philosophy heading, type: string, required: true }
+      - { name: philosophyHeading, label: Philosophy heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
       - name: philosophy
         label: Makeup philosophy
         description: Leave a blank line between paragraphs.
@@ -321,7 +334,7 @@ content:
         required: true
         options: { path: src/assets/media/about }
       - { name: workingImageAlt, label: Working photograph description (alt text), type: string, required: true }
-      - { name: experienceHeading, label: “Booking” section heading, type: string, required: true }
+      - { name: experienceHeading, label: “Booking” section heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
       - name: experienceSteps
         label: Booking steps
         description: Shown as numbered steps, in this order.
@@ -331,7 +344,7 @@ content:
         fields:
           - { name: title, label: Step title, type: string, required: true }
           - { name: text, label: Step description, type: text, required: true }
-      - { name: backgroundHeading, label: Training & experience heading, type: string, required: true }
+      - { name: backgroundHeading, label: Training & experience heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
       - name: background
         label: Training & experience
         description: Only add qualifications, years of experience, awards or affiliations that are genuinely yours. If left empty, this whole section is hidden.
@@ -345,13 +358,13 @@ content:
     format: json
     fields:
       - { name: eyebrow, label: Small line above the heading, type: string, required: true }
-      - { name: heading, label: Heading, type: string, required: true }
+      - { name: heading, label: Heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
       - { name: intro, label: Welcome introduction, type: text, required: true }
       - { name: formHeading, label: Form heading, type: string, required: true }
       - { name: responseNote, label: Note under the form heading, type: string, required: true }
       - { name: successHeading, label: “Enquiry sent” heading, type: string, required: true }
       - { name: successMessage, label: “Enquiry sent” message, type: text, required: true }
-      - { name: detailsHeading, label: Direct contact heading, type: string, required: true }
+      - { name: detailsHeading, label: Direct contact heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
       - name: serviceOptions
         label: Services shown in the enquiry form
         description: One option per line. These are the choices visitors can tick.
@@ -366,7 +379,7 @@ content:
     path: src/content/site/faqs.json
     format: json
     fields:
-      - { name: heading, label: Section heading, type: string, required: true }
+      - { name: heading, label: Section heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
       - name: items
         label: Questions
         type: object
@@ -386,7 +399,7 @@ content:
     path: src/content/site/gallery.json
     format: json
     fields:
-      - { name: heading, label: Page heading, type: string, required: true }
+      - { name: heading, label: Page heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
       - { name: intro, label: Page introduction, type: text, required: true }
       - name: items
         label: Photographs
@@ -436,7 +449,7 @@ content:
     path: src/content/site/testimonials.json
     format: json
     fields:
-      - { name: heading, label: Page heading, type: string, required: true }
+      - { name: heading, label: Page heading, description: "Optional: put *asterisks* around a word or two to set them in italic gold.", type: string, required: true }
       - name: intro
         label: Message shown while there are no testimonials
         type: text
@@ -460,8 +473,9 @@ content:
   - name: instagram
     label: Instagram gallery
     description: >-
-      A hand-picked selection of images, not a live feed. Add, remove and
-      reorder pictures here to refresh the home page preview.
+      A hand-picked selection of posts and reels, not a live feed. They appear
+      on the home page as swipeable cards in this order. Add, remove and
+      reorder them here.
     type: file
     path: src/content/site/instagram.json
     format: json
@@ -477,6 +491,16 @@ content:
             type: image
             required: true
             options: { path: src/assets/media/instagram }
+          - name: kind
+            label: Type
+            description: Reels get a small “Reel” label on their card.
+            type: select
+            required: true
+            default: post
+            options:
+              values:
+                - { value: post, label: Post }
+                - { value: reel, label: Reel }
           - { name: alt, label: Description (alt text), type: string, required: true }
           - name: link
             label: Link to the Instagram post (optional)

@@ -1,12 +1,14 @@
 {
-  "aboutText": "Beauty by Nam is a bridal and occasion hair and makeup service based in Leicester. Nam works with brides across Leicestershire and the East Midlands, and travels for weddings elsewhere in the UK and abroad. Every look is created around the individual, from the first conversation to the final finishing touch.",
-  "thankYou": "Thank you for taking the time to consider Beauty by Nam for your special day. It would be a pleasure to be part of it. Please find your personalised quotation on the following pages, and do get in touch if you would like to change anything.",
+  "aboutText": "Beauty by Nam is a bridal and occasion hair and makeup studio based in Leicester. We work with brides across Leicestershire and the East Midlands, and we are happy to travel for weddings elsewhere in the UK and abroad. Every look we create is built around the individual, from our first conversation to the final finishing touch.",
+  "thankYou": "Thank you so much for taking the time to consider us for your special day. It would be a joy to be part of it. Your personalised quotation is on the following pages, and please do get in touch if you would like us to change anything.",
   "validityDays": 14,
   "paymentInstructions": "",
   "keyTerms": [
-    "A deposit is required to secure your date. Your date is only reserved once the deposit has been received.",
-    "Travel costs are charged in addition to the service prices and are shown as a separate line on this quotation.",
+    "A deposit is required to secure your date. Your date is only reserved once we have received the deposit.",
+    "Our travel costs are charged in addition to the service prices and are shown as a separate line on this quotation.",
     "The remaining balance is due before the day, as stated on this quotation.",
-    "Please let Nam know of any allergies or skin sensitivities before your booking."
+    "Cancellations made at least 12 weeks before your booking receive a full refund. If you cancel at the last minute or the day before, the amount paid is not refunded, as the date was held for you.",
+    "You are welcome to change your date with at least 12 weeks' notice, subject to availability. If we cannot offer your new date, we will refund you in full.",
+    "Please let us know of any allergies or skin sensitivities before your booking."
   ]
 }

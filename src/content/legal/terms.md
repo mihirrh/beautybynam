@@ -1,7 +1,7 @@
 ---
 title: Terms & Conditions
-updated: 2026-01-01
-intro: These terms explain how bookings work with Beauty by Nam. Please read them before confirming your date.
+updated: 2026-11-11
+intro: These terms explain how bookings work with us at Beauty by Nam. Please read them before confirming your date.
 ---
 
 ## 1. Quotations
@@ -20,17 +20,24 @@ Your date is only reserved once your quotation has been accepted and the deposit
 
 The remaining balance is payable by the date shown on your quotation. Payment details are provided with your quotation.
 
-## 5. Changes and cancellations
+## 5. Cancellations and changes
 
-Please let Nam know as soon as possible if your plans change. Changes to the date, venue or number of people are subject to availability and may change the price. Cancellation terms, including the treatment of the deposit, will be set out in writing when you book.
+Your date is held exclusively for you, and we turn other bookings away to keep it. Our cancellation policy reflects that.
+
+- **Cancelling with 12 weeks' notice or more:** please tell us at least 12 weeks before your booking and we will give you a full refund.
+- **Cancelling at the last minute or the day before:** the amount you have paid will not be refunded, as the date was held for you.
+- **Changing your date:** please give us at least 12 weeks' notice and we will move your booking, *subject to availability*.
+- **If we are not available on the new date you want:** we will give you a full refund, as long as you told us at least 12 weeks before your original booking date.
+
+Changes to the venue or the number of people are also subject to availability and may change the price.
 
 ## 6. Timings and access
 
-Please make sure there is a suitable space with good natural light, a power socket and a chair where possible. Nam works to a timetable agreed in advance, and delays on the day may limit the time available for the services booked.
+Please make sure there is a suitable space with good natural light, a power socket and a chair where possible. We work to a timetable agreed in advance, and delays on the day may limit the time available for the services booked.
 
 ## 7. Allergies and skin conditions
 
-Please tell Nam about any allergies, sensitivities or skin conditions before your booking. Nam cannot be held responsible for reactions to products where relevant conditions were not disclosed.
+Please tell us about any allergies, sensitivities or skin conditions before your booking. We cannot be held responsible for reactions to products where relevant conditions were not disclosed.
 
 ## 8. Trials
 
@@ -38,7 +45,7 @@ If a trial is included in your quotation, it will be listed on it. Any additiona
 
 ## 9. Photography
 
-Nam may like to photograph completed work for her portfolio and social media. Please tell her at the time of booking if you would prefer that she did not.
+We may like to photograph completed work for our portfolio and social media. Please tell us at the time of booking if you would prefer that we did not.
 
 ## 10. Contact
 

@@ -1,10 +1,52 @@
 {
   "items": [
-    { "image": "/src/assets/media/instagram/post-01.jpg", "alt": "Recent bridal makeup look shared on Instagram", "link": "" },
-    { "image": "/src/assets/media/instagram/post-02.jpg", "alt": "Recent bridal hair look shared on Instagram", "link": "" },
-    { "image": "/src/assets/media/instagram/post-03.jpg", "alt": "Recent occasion makeup look shared on Instagram", "link": "" },
-    { "image": "/src/assets/media/instagram/post-04.jpg", "alt": "Recent bridal detail shared on Instagram", "link": "" },
-    { "image": "/src/assets/media/instagram/post-05.jpg", "alt": "Recent wedding morning moment shared on Instagram", "link": "" },
-    { "image": "/src/assets/media/instagram/post-06.jpg", "alt": "Recent destination wedding look shared on Instagram", "link": "" }
+    {
+      "image": "/src/assets/media/instagram/post-01.jpg",
+      "alt": "Bridal makeup look shared on Instagram",
+      "kind": "post",
+      "link": ""
+    },
+    {
+      "image": "/src/assets/media/instagram/post-02.jpg",
+      "alt": "Behind the scenes on a wedding morning",
+      "kind": "reel",
+      "link": ""
+    },
+    {
+      "image": "/src/assets/media/instagram/post-03.jpg",
+      "alt": "Occasion makeup look shared on Instagram",
+      "kind": "post",
+      "link": ""
+    },
+    {
+      "image": "/src/assets/media/instagram/post-04.jpg",
+      "alt": "Bridal detail shared on Instagram",
+      "kind": "post",
+      "link": ""
+    },
+    {
+      "image": "/src/assets/media/instagram/post-05.jpg",
+      "alt": "Bridal hair reel shared on Instagram",
+      "kind": "reel",
+      "link": ""
+    },
+    {
+      "image": "/src/assets/media/instagram/post-06.jpg",
+      "alt": "Wedding morning moment shared on Instagram",
+      "kind": "post",
+      "link": ""
+    },
+    {
+      "image": "/src/assets/media/instagram/post-07.jpg",
+      "alt": "Destination wedding look shared on Instagram",
+      "kind": "post",
+      "link": ""
+    },
+    {
+      "image": "/src/assets/media/instagram/post-08.jpg",
+      "alt": "Finished bridal look shared on Instagram",
+      "kind": "post",
+      "link": ""
+    }
   ]
 }

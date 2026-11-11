@@ -4,6 +4,7 @@ import PageHeader from '../components/PageHeader.astro';
 import FaqList from '../components/FaqList.astro';
 import { contact, settings, faqs, has, telHref } from '../lib/site';
 import { faqSchema } from '../lib/schema';
+import { em } from '../lib/text';
 
 const trail = [
   { name: 'Home', path: '/' },
@@ -14,21 +15,21 @@ const trail = [
 <Base page="contact" breadcrumbs={trail} schema={[faqSchema(faqs.items)]}>
   <PageHeader eyebrow={contact.eyebrow} title={contact.heading} intro={contact.intro} trail={trail} />
 
-  <section class="pb-24 md:pb-32">
+  <section class="pb-28 md:pb-40">
     <div class="wrap grid gap-16 md:grid-cols-12 md:gap-8">
       <div class="md:col-span-7">
         <h2 class="h3">{contact.formHeading}</h2>
         <p class="mt-3 text-muted">{contact.responseNote}</p>
 
-        <div id="form-success" class="mt-10 hidden border border-line p-8" role="status" tabindex="-1">
+        <div id="form-success" class="mt-10 hidden border border-line bg-taupe p-8" role="status" tabindex="-1">
           <h3 class="h3">{contact.successHeading}</h3>
           <p class="mt-4 text-muted">{contact.successMessage}</p>
         </div>
 
         <div id="form-error" class="mt-10 hidden border border-error p-6" role="alert" tabindex="-1">
           <p class="text-error" data-error-text>
-            Sorry, your enquiry could not be sent. Please try again in a moment or message
-            <a href={settings.instagramUrl} class="underline" target="_blank" rel="noopener noreferrer">@{settings.instagramHandle} on Instagram</a>.
+            We are sorry, your enquiry could not be sent. Please try again in a moment, or message us on Instagram:
+            <a href={settings.instagramUrl} class="underline" target="_blank" rel="noopener noreferrer">@{settings.instagramHandle}</a>.
           </p>
         </div>
 
@@ -87,7 +88,7 @@ const trail = [
           </div>
 
           <div class="field sm:col-span-2">
-            <label for="message">Anything else I should know?</label>
+            <label for="message">Anything else we should know?</label>
             <textarea class="input" id="message" name="message" maxlength="3000" aria-describedby="message-hint"></textarea>
             <span class="hint" id="message-hint">Timings, the look you have in mind, allergies or skin sensitivities.</span>
           </div>
@@ -110,16 +111,16 @@ const trail = [
       </div>
 
       <aside class="md:col-span-4 md:col-start-9" aria-label="Contact details">
-        <h2 class="eyebrow">{contact.detailsHeading}</h2>
+        <h2 class="h3" set:html={em(contact.detailsHeading)} />
         <ul class="mt-6 space-y-4 border-t border-line pt-6">
-          {has(settings.email) && <li><a class="text-cream hover:text-champagne" href={`mailto:${settings.email}`}>{settings.email}</a></li>}
-          {has(settings.phone) && <li><a class="text-cream hover:text-champagne" href={telHref(settings.phone)}>{settings.phone}</a></li>}
+          {has(settings.email) && <li><a class="text-ink hover:text-gold-deep" href={`mailto:${settings.email}`}>{settings.email}</a></li>}
+          {has(settings.phone) && <li><a class="text-ink hover:text-gold-deep" href={telHref(settings.phone)}>{settings.phone}</a></li>}
           <li>
-            <a class="text-cream hover:text-champagne" href={settings.instagramUrl} target="_blank" rel="noopener noreferrer">
+            <a class="text-ink hover:text-gold-deep" href={settings.instagramUrl} target="_blank" rel="noopener noreferrer">
               Instagram @{settings.instagramHandle}<span class="sr-only"> (opens in a new tab)</span>
             </a>
           </li>
-          <li class="text-muted">Based in {settings.locality}, {settings.region}. Covering the East Midlands and weddings across the UK.</li>
+          <li class="text-muted">We are based in {settings.locality}, {settings.region}, covering the East Midlands and weddings across the UK.</li>
         </ul>
       </aside>
     </div>
@@ -127,7 +128,7 @@ const trail = [
 
   <section class="section surface-2" aria-labelledby="faq-heading">
     <div class="wrap grid gap-10 md:grid-cols-12 md:gap-8">
-      <h2 id="faq-heading" class="h2 md:col-span-4">{faqs.heading}</h2>
+      <h2 id="faq-heading" class="h2 md:col-span-4" set:html={em(faqs.heading)} />
       <div class="md:col-span-7 md:col-start-6"><FaqList /></div>
     </div>
   </section>

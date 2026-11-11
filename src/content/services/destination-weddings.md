@@ -13,10 +13,10 @@ includes:
 suitableFor: Couples marrying away from Leicester, whether elsewhere in the UK or overseas, who want a familiar artist for the morning.
 expect: Destination bookings are quoted individually because travel, accommodation and timings differ for every wedding. Please send your location and dates as early as you can.
 seoTitle: Destination Wedding Makeup Artist UK | Beauty by Nam
-seoDescription: Destination wedding hair and makeup from Beauty by Nam. Based in Leicester and available for weddings across the UK and abroad by arrangement.
+seoDescription: Destination wedding hair and makeup from Beauty by Nam. We are based in Leicester and available for weddings across the UK and abroad by arrangement.
 ---
 
-Marrying away from home adds some practicalities, and Nam is happy to help plan them.
+Marrying away from home adds some practicalities, and we are happy to help plan them.
 
 Heat, humidity and tight schedules all affect hair and makeup, so the look and the products are chosen with your location in mind.
 

@@ -66,7 +66,7 @@ const used = categories.filter((c) => items.some((i) => i.category === c.value))
                   sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 100vw"
                   widths={[400, 640, 900, 1200]}
                 />
-                <span class="mt-3 block text-sm tracking-wide text-muted transition-colors group-hover:text-champagne">{item.caption}</span>
+                <span class="mt-3 block text-sm tracking-wide text-muted transition-colors group-hover:text-gold-deep">{item.caption}</span>
               </a>
             </li>
           ))
@@ -78,7 +78,7 @@ const used = categories.filter((c) => items.some((i) => i.category === c.value))
   <!-- Lightbox: native dialog gives focus trapping, Esc and top-layer rendering. -->
   <dialog class="lightbox" aria-label="Portfolio image viewer" data-dialog>
     <div class="lightbox-bar">
-      <p class="text-xs tracking-[0.25em] uppercase text-antique" aria-live="polite" data-counter></p>
+      <p class="text-xs tracking-[0.25em] uppercase text-gold-deep" aria-live="polite" data-counter></p>
       <button type="button" class="lightbox-btn" data-close aria-label="Close image viewer">
         <span aria-hidden="true">Close</span>
       </button>
@@ -113,12 +113,15 @@ const used = categories.filter((c) => items.some((i) => i.category === c.value))
   }
   .gallery-item {
     break-inside: avoid;
-    margin-bottom: 2.25rem;
+    margin-bottom: 3.5rem;
   }
   /* Break the grid rhythm slightly so it reads as an editorial layout. */
   @media (min-width: 1024px) {
     .gallery-item:nth-child(3n + 2) {
-      padding-top: 3rem;
+      padding-top: 5rem;
+    }
+    .gallery-item:nth-child(3n) {
+      padding-top: 1.5rem;
     }
   }
   .gallery-item[hidden] {
@@ -135,11 +138,11 @@ const used = categories.filter((c) => items.some((i) => i.category === c.value))
     transition: color 0.3s, border-color 0.3s;
   }
   .filter:hover {
-    color: var(--color-champagne);
+    color: var(--color-ink);
   }
   .filter[aria-pressed='true'] {
-    color: var(--color-champagne);
-    border-color: var(--color-antique);
+    color: var(--color-ink);
+    border-color: var(--color-gold);
   }
 
   .lightbox {
@@ -152,8 +155,8 @@ const used = categories.filter((c) => items.some((i) => i.category === c.value))
     margin: 0;
     padding: 0;
     border: 0;
-    background: rgb(5 5 5 / 0.97);
-    color: var(--color-cream);
+    background: var(--color-ivory);
+    color: var(--color-ink);
   }
   .lightbox:not([open]) {
     display: none;
@@ -165,7 +168,7 @@ const used = categories.filter((c) => items.some((i) => i.category === c.value))
     align-items: center;
   }
   .lightbox::backdrop {
-    background: #050505;
+    background: var(--color-ivory);
   }
   .lightbox-bar {
     grid-column: 1 / -1;
@@ -179,7 +182,7 @@ const used = categories.filter((c) => items.some((i) => i.category === c.value))
     font-weight: 500;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--color-champagne);
+    color: var(--color-ink);
     padding: 0.75rem 0.25rem;
     min-height: 2.75rem;
   }
@@ -194,7 +197,7 @@ const used = categories.filter((c) => items.some((i) => i.category === c.value))
   }
   .lightbox-figure img {
     max-width: 100%;
-    max-height: calc(100% - 3rem);
+    max-height: calc(100% - 3.5rem);
     width: auto;
     height: auto;
     object-fit: contain;
@@ -202,8 +205,9 @@ const used = categories.filter((c) => items.some((i) => i.category === c.value))
   .lightbox-caption {
     margin-top: 1rem;
     font-family: var(--font-display);
-    font-size: 1.25rem;
-    color: var(--color-champagne);
+    font-size: 1.35rem;
+    font-style: italic;
+    color: var(--color-charcoal);
     text-align: center;
     padding-inline: 1rem;
   }
@@ -218,8 +222,8 @@ const used = categories.filter((c) => items.some((i) => i.category === c.value))
     display: block;
     width: 0.8rem;
     height: 0.8rem;
-    border-top: 1px solid var(--color-champagne);
-    border-left: 1px solid var(--color-champagne);
+    border-top: 1px solid var(--color-ink);
+    border-left: 1px solid var(--color-ink);
   }
   .lightbox-prev span {
     transform: rotate(-45deg);

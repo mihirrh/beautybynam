@@ -14,7 +14,8 @@ const walk = (d) => readdirSync(d).flatMap((f) => {
 const htmlFiles = walk(DIST).filter((f) => f.endsWith('.html'));
 const titles = new Map();
 const descs = new Map();
-const allPaths = new Set(htmlFiles.map((f) => '/' + f.slice(DIST.length + 1).replace(/index\.html$/, '').replace(/\.html$/, '')).map((p) => (p.length > 1 ? p.replace(/\/$/, '') : p)));
+// build.format 'directory': dist/about/index.html is served at /about (and 404.html stays a file).
+const allPaths = new Set(htmlFiles.map((f) => '/' + f.slice(DIST.length + 1).replace(/index\.html$/, '').replace(/(.)\/$/, '$1')));
 
 const attr = (tag, name) => {
   const v = (tag.match(new RegExp(`\\s${name}\\s*=\\s*"([^"]*)"`, 'i')) ?? [])[1];
@@ -25,7 +26,7 @@ const attr = (tag, name) => {
 for (const file of htmlFiles) {
   const page = '/' + file.slice(DIST.length + 1);
   const html = readFileSync(file, 'utf8');
-  const isPrivate = page.includes('/studio/') || page.endsWith('/404.html');
+  const isPrivate = page.startsWith('/studio/') || page === '/404.html';
 
   const title = ((html.match(/<title>([^<]*)<\/title>/) ?? [])[1] ?? '').replace(/&amp;/g, '&');
   const desc = (html.match(/<meta name="description" content="([^"]*)"/) ?? [])[1];
@@ -47,12 +48,12 @@ for (const file of htmlFiles) {
       descs.set(desc, page);
     }
     if (!canonical) warn(page, 'missing canonical');
-    else if (/index\.html|\.html$/.test(canonical)) warn(page, `canonical not clean: ${canonical}`);
+    else if (/index\.html|\.html$/.test(canonical) || (new URL(canonical).pathname.length > 1 && canonical.endsWith('/'))) warn(page, `canonical must be a clean URL with no trailing slash: ${canonical}`);
     for (const p of ['og:title', 'og:description', 'og:image', 'og:url', 'twitter:card', 'twitter:image']) {
       if (!html.includes(`"${p}"`)) warn(page, `missing ${p}`);
     }
     if (robots && /noindex/.test(robots)) warn(page, 'public page is noindex');
-  } else if (page.includes('/studio/') && !(robots ?? '').includes('noindex')) {
+  } else if (page.startsWith('/studio/') && !(robots ?? '').includes('noindex')) {
     warn(page, 'private page is missing noindex');
   }
   if (h1s !== 1) warn(page, `${h1s} <h1> elements`);
@@ -102,9 +103,10 @@ for (const file of htmlFiles) {
     }
     const clean = href.split('#')[0].split('?')[0];
     if (!clean) continue;
-    const norm = clean.length > 1 ? clean.replace(/\/$/, '') : clean;
-    const asset = existsSync(join(DIST, clean));
-    if (!allPaths.has(norm) && !asset) warn(page, `broken internal link ${href}`);
+    const isFile = /\.[a-z0-9]+$/i.test(clean);
+    if (!isFile && clean.length > 1 && clean.endsWith('/')) warn(page, `internal link with a trailing slash (causes a redirect): ${href}`);
+    const asset = isFile && existsSync(join(DIST, clean));
+    if (!allPaths.has(clean) && !asset) warn(page, `broken internal link ${href}`);
   }
 }
 

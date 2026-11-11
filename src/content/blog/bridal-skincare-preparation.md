@@ -25,6 +25,6 @@ Introduce new products and treatments well in advance, so any reaction shows its
 
 If your skin is sensitive, reactive or you have a specific concern, speak to a pharmacist, GP or dermatologist. This article is general advice, not medical advice.
 
-## Tell your makeup artist
+## Tell us before the day
 
-Let Nam know about allergies and sensitivities when you enquire. It helps her choose the right preparation and products for you.
+Let us know about allergies and sensitivities when you enquire. It helps us choose the right preparation and products for you.

@@ -1,17 +1,17 @@
 ---
 import { Image } from 'astro:assets';
-import seal from '../assets/brand/logo-seal.png';
-import { settings, has, telHref } from '../lib/site';
+import logo from '../assets/brand/logo.png';
+import { settings, has, telHref, cleanHref } from '../lib/site';
 
 const year = new Date().getFullYear();
 const nav = settings.nav;
 ---
 
-<footer class="site-footer border-t border-line bg-ink-2">
+<footer class="site-footer border-t border-hair bg-taupe">
   <div class="wrap grid gap-12 py-16 md:grid-cols-12 md:py-20">
     <div class="md:col-span-5">
       <a href="/" class="inline-block" aria-label="Beauty by Nam, home">
-        <Image src={seal} alt="Beauty by Nam logo" width={120} height={120} loading="lazy" class="h-[7.5rem] w-[7.5rem]" />
+        <Image src={logo} alt="Beauty by Nam logo" width={220} height={172} densities={[1, 2]} loading="lazy" class="logo-mark h-auto w-[13.75rem]" />
       </a>
       <p class="mt-6 max-w-sm text-muted">{settings.footerBlurb}</p>
     </div>
@@ -20,20 +20,20 @@ const nav = settings.nav;
       <p class="eyebrow mb-5">Explore</p>
       <ul class="space-y-3">
         {nav.map((item) => (
-          <li><a href={item.href} class="text-cream/90 hover:text-champagne">{item.label}</a></li>
+          <li><a href={cleanHref(item.href)} class="text-ink hover:text-gold-deep">{item.label}</a></li>
         ))}
-        <li><a href="/terms" class="text-cream/90 hover:text-champagne">Terms &amp; Conditions</a></li>
+        <li><a href="/terms" class="text-ink hover:text-gold-deep">Terms &amp; Conditions</a></li>
       </ul>
     </nav>
 
     <div class="md:col-span-4">
       <p class="eyebrow mb-5">Get in touch</p>
-      <ul class="space-y-3 text-cream/90">
-        <li><a href="/contact" class="hover:text-champagne">Booking enquiry form</a></li>
-        {has(settings.email) && <li><a href={`mailto:${settings.email}`} class="hover:text-champagne">{settings.email}</a></li>}
-        {has(settings.phone) && <li><a href={telHref(settings.phone)} class="hover:text-champagne">{settings.phone}</a></li>}
+      <ul class="space-y-3 text-ink">
+        <li><a href="/contact" class="hover:text-gold-deep">Booking enquiry form</a></li>
+        {has(settings.email) && <li><a href={`mailto:${settings.email}`} class="hover:text-gold-deep">{settings.email}</a></li>}
+        {has(settings.phone) && <li><a href={telHref(settings.phone)} class="hover:text-gold-deep">{settings.phone}</a></li>}
         <li>
-          <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" class="hover:text-champagne">
+          <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" class="hover:text-gold-deep">
             Instagram @{settings.instagramHandle}<span class="sr-only"> (opens in a new tab)</span>
           </a>
         </li>
@@ -41,9 +41,9 @@ const nav = settings.nav;
       </ul>
     </div>
   </div>
-  <div class="border-t border-line">
+  <div class="border-t border-hair">
     <p class="wrap py-6 text-xs tracking-wide text-muted">
-      © {year} {settings.businessName}. All rights reserved.
+      © {year} {settings.businessName}. All rights reserved. <a href="/terms" class="underline underline-offset-4 hover:text-gold-deep">Terms &amp; Conditions</a>
     </p>
   </div>
 </footer>

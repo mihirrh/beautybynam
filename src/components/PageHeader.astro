@@ -1,5 +1,6 @@
 ---
 import Breadcrumbs from './Breadcrumbs.astro';
+import { em } from '../lib/text';
 
 interface Props {
   eyebrow: string;
@@ -12,11 +13,11 @@ interface Props {
 const { eyebrow, title, intro, trail, class: className = '' } = Astro.props;
 ---
 
-<header class:list={['wrap pb-12 pt-36 md:pb-16 md:pt-44', className]}>
+<header class:list={['wrap pb-16 pt-40 md:pb-28 md:pt-60', className]}>
   <Breadcrumbs trail={trail} />
-  <div class="mt-10 max-w-4xl" data-stagger>
+  <div class="mt-14 max-w-5xl" data-stagger>
     <p class="eyebrow" data-reveal>{eyebrow}</p>
-    <h1 class="h1 mt-5" data-reveal>{title}</h1>
-    {intro && <p class="lede mt-7" data-reveal>{intro}</p>}
+    <h1 class="h1 mt-6" data-reveal set:html={em(title)} />
+    {intro && <p class="lede mt-9" data-reveal>{intro}</p>}
   </div>
 </header>

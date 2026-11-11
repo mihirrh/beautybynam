@@ -5,7 +5,8 @@ Website for **Beauty by Nam**, a bridal hair and makeup artist based in Leiceste
 - Static [Astro](https://astro.build) site, Tailwind CSS 4 plus a small custom design system (`src/styles/global.css`)
 - Content managed through [Pages CMS](https://pagescms.org) (`.pages.yml`), stored as JSON and Markdown in this repository
 - Hosted on Cloudflare Pages, redeployed automatically on every Git commit
-- Subtle [Motion](https://motion.dev) animation, switched off for visitors who prefer reduced motion
+- Light, airy editorial design (solid ivory `#FDFCF0`, charcoal type, gold used only as a fine accent, no background gradients)
+- Gentle [Motion](https://motion.dev) animation (staggered reveals, soft hero parallax), switched off for visitors who prefer reduced motion
 - Booking enquiry form that really sends email (Cloudflare Pages Function + Resend)
 - Private PDF quote builder at `/studio/quote` (PDFKit, runs in the browser)
 
@@ -56,17 +57,17 @@ src/
   styles/global.css      Design tokens and bespoke styling
 public/                  Favicons, logo, static files
 docs/LIGHTHOUSE.md       Test and Lighthouse report
-brand/                   Original logo files (not shipped)
+brand/                   Original transparent logo files (nam_logo.png/svg/webp, not shipped)
 ```
 
 ## 4. GitHub
 
-The repository already exists with the remote set to `https://github.com/mihirrh/beautybynam.git`. Nothing has been committed yet. When you are ready:
+The repository already exists with the remote set to `https://github.com/mihirrh/beautybynam.git`. The first version is already pushed; later changes are committed as you choose. To publish new work:
 
 ```bash
 git add -A
 git status          # check that no .env, .dev.vars or .qa files are listed
-git commit -m "Build Beauty by Nam website"
+git commit -m "Describe your change"
 git push -u origin main
 ```
 
@@ -161,12 +162,30 @@ For stronger protection you can instead put `/studio/*` behind **Cloudflare Acce
 
 The Instagram section is a **curated gallery**, not a live feed. Instagram has no free, reliable, token-free way to embed a live feed on a static site, and scraping would be fragile and against their terms. So the homepage strip shows images you choose in Pages CMS, clearly links to [@beautybynamm](https://www.instagram.com/beautybynamm/), and never claims to be live. No Instagram scripts or access tokens are used.
 
-## 10. Tooling notes (please read)
+The strip is a swipeable stack of cards (drag, swipe, arrow keys or the on-screen buttons). Each item has a **Post** or **Reel** type in Pages CMS; reels get a small badge and link to the reel itself. Reorder items in the CMS to change the stack order.
 
-- **Motion.** The `motion` package is installed and used. `npx motion-ai` is an interactive installer and was **not run** during the build. Run it yourself in a terminal if you want the Motion AI tooling: `npx motion-ai`.
+## 10. Routing, 404 and images
+
+- **URLs.** `astro.config.mjs` uses `build.format: 'directory'` and `trailingSlash: 'never'`. Pages build as `/services/index.html` and Cloudflare Pages serves them at `/services` (no slash, no `.html`). All internal links are written without a trailing slash, and the `cleanHref()` helper in `src/lib/site.ts` strips one from anything editors type in the CMS navigation. Cloudflare redirects `/services/` to `/services`, so old or typed links still work. `npm run check:seo` fails the build if any internal link has a trailing slash or points nowhere.
+- **404 page.** `src/pages/404.astro` becomes `404.html`; Cloudflare Pages serves it automatically for any unknown address.
+- **Images.** Every photograph and the logo go through Astro's `<Picture>` / `<Image>` (`astro:assets`), which produces AVIF and WebP with a JPEG fallback, several widths, and width/height to avoid layout shift. The one hand-written `<img>` is the empty lightbox frame on the portfolio; its `src` is filled in with an Astro-generated WebP (`getImage`) when you open a photo.
+- **Motion helpers.** `src/components/FadeIn.astro` and `StaggeredList.astro` wrap the reveal hooks in `src/scripts/site.ts` (the `motion` package: soft cubic-bezier easing, switched off for reduced motion). The hero headline, mobile menu and image reveals use the same script.
+
+## 11. Design, logo and headings
+
+- **Logo.** The transparent logo lives in `brand/nam_logo.png`. After replacing it, run `node scripts/prepare-assets.mjs`; this trims it and regenerates `src/assets/brand/logo.png`, the favicons and the touch icon. The same transparent PNG is used in the quote PDF.
+- **Header wordmark.** The header shows "beauty by nam" as a script wordmark (live text, so it stays crisp and fast). The full logo image is used in the footer, the quote PDF, structured data and the favicons.
+- **Headings in the CMS.** Wrap a word in asterisks to set it in italic gold, for example `Your wedding, *beautifully* yours`. The CMS shows a hint on each heading field.
+- **Copy.** All text is written in the first person plural ("we", "our studio") in UK English. Keep to that when you edit.
+- **Placeholder photographs.** Every image in `src/assets/media` is a neutral light-palette placeholder, **not** real work. The layouts are built for portrait and landscape bridal photography; replace the images (and alt text) through Pages CMS.
+
+## 12. Tooling notes (please read)
+
+- **Motion.** The `motion` package is installed and used. `npx motion-ai` is an interactive installer and was **not run**. The package's published skill guidance was read and followed (animate only transform, opacity and clip-path; soft, slightly long easing; respect reduced motion), but the tool itself has not configured anything. Run `npx motion-ai` yourself in a terminal if you want it.
+- **Motionsites skill.** `/plugin marketplace add Motionsites-AI/claude-skill` and `/plugin install motionsites-web-builder@motionsites` are Claude Code slash commands and were **not run**. Run them inside Claude Code if you want that skill available.
 - **Open SEO.** The `seo-audit`, `local-seo` and `keyword-research` skills from [every-app/open-seo](https://github.com/every-app/open-seo) are installed in `.claude/skills/`. The site was reviewed with `npm run check:seo` (metadata, canonicals, JSON-LD, sitemap, headings, alt text, internal links). The OpenSEO data tools (keyword volumes, live site audit, rank tracking) need a public URL and use credits, so run them after launch.
 
-## 11. Before launch checklist
+## 13. Before launch checklist
 
 The site ships with neutral placeholder photographs and editable placeholder text. Replace or confirm:
 
@@ -181,6 +200,6 @@ The site ships with neutral placeholder photographs and editable placeholder tex
 - [ ] **Terms & Conditions.** The text is a sensible template (including that travel costs are charged in addition) but is not legal advice. Review it, ideally with a professional
 - [ ] Re-run `npm run verify` and Lighthouse once real photos are in
 
-## 12. Browser support and accessibility
+## 14. Browser support and accessibility
 
 Semantic HTML, keyboard-operable menu and lightbox with visible focus, labelled form fields with accessible errors, and full `prefers-reduced-motion` support. The public site works without JavaScript apart from the lightbox, filters and animation.

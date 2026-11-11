@@ -16,19 +16,20 @@ const exists = (f) => access(f).then(() => true, () => false);
 await mkdir(out('src/assets/brand'), { recursive: true });
 await mkdir(out('public'), { recursive: true });
 
-const logoSrc = out('brand/logo-original.png');
-// Bounding box of the artwork inside the 500px canvas (measured from alpha).
-const pad = 8;
-const crop = { left: 89 - pad, top: 112 - pad, width: 386 + pad * 2, height: 303 + pad * 2 };
-const logo = await sharp(logoSrc).extract(crop).png({ compressionLevel: 9 }).toBuffer();
-await sharp(logo).toFile(out('src/assets/brand/logo.png'));
+// brand/nam_logo.png is the supplied transparent logo (1500px square). It is
+// trimmed to the artwork so it sits on any background without a bounding box.
+// The transparent alpha channel is preserved everywhere: site, PDF and icons.
+const logoSrc = out('brand/nam_logo.png');
+const trimmed = await sharp(logoSrc).trim({ threshold: 2 }).png({ compressionLevel: 9 }).toBuffer();
+// Site/PDF logo: 1200px wide keeps it crisp at 2x on retina and in print.
+await sharp(trimmed).resize({ width: 1200 }).png({ compressionLevel: 9 }).toFile(out('src/assets/brand/logo.png'));
 
-// Favicon / touch icon: the gold ring on near-black, centred.
+// Favicon / touch icon: the logo on soft ivory (icons need a solid tile on iOS).
+const IVORY = '#FDFCF0';
 const iconCanvas = async (size, file) => {
-  const inner = Math.round(size * 0.82);
-  const art = await sharp(logoSrc).extract({ left: 95, top: 108, width: 330, height: 320 })
-    .resize(inner, inner, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).toBuffer();
-  await sharp({ create: { width: size, height: size, channels: 4, background: '#080808' } })
+  const inner = Math.round(size * 0.9);
+  const art = await sharp(trimmed).resize(inner, inner, { fit: 'inside' }).toBuffer();
+  await sharp({ create: { width: size, height: size, channels: 4, background: IVORY } })
     .composite([{ input: art, gravity: 'centre' }]).png().toFile(out('public', file));
 };
 await iconCanvas(32, 'favicon-32.png');
@@ -37,10 +38,10 @@ await iconCanvas(512, 'icon-512.png');
 
 /* ------------------------------------------------------ placeholder art */
 const palettes = [
-  ['#6b5440', '#16110d', '#e8d7b5'],
-  ['#5e4a47', '#140f0f', '#e8d7b5'],
-  ['#665a46', '#13110b', '#d4af37'],
-  ['#6e5848', '#15100d', '#e8d7b5'],
+  ['#efe3d2', '#cdb594', '#8a6a3c'],
+  ['#f1e4dc', '#d2b4a6', '#8a6a3c'],
+  ['#ece6d6', '#c9bc9a', '#8a6a3c'],
+  ['#f2e8dc', '#d6bda2', '#8a6a3c'],
 ];
 
 function art(w, h, seed) {
@@ -56,20 +57,20 @@ function art(w, h, seed) {
   return Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
   <defs>
     <radialGradient id="g" cx="${cx}%" cy="${cy}%" r="85%"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></radialGradient>
-    <radialGradient id="glow" cx="${cx}%" cy="${cy}%" r="40%"><stop offset="0" stop-color="${accent}" stop-opacity=".16"/><stop offset="1" stop-color="${accent}" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glow" cx="${cx}%" cy="${cy}%" r="40%"><stop offset="0" stop-color="${accent}" stop-opacity=".30"/><stop offset="1" stop-color="${accent}" stop-opacity="0"/></radialGradient>
     <filter id="blur"><feGaussianBlur stdDeviation="${Math.max(w, h) / 90}"/></filter>
-    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="${seed}"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .05 0"/></filter>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="${seed}"/><feColorMatrix values="0 0 0 0 .45  0 0 0 0 .34  0 0 0 0 .22  0 0 0 .08 0"/></filter>
   </defs>
   <rect width="100%" height="100%" fill="url(#g)"/>
   <rect width="100%" height="100%" fill="url(#glow)"/>
   <g filter="url(#blur)">${strokes}</g>
-  <ellipse cx="${w * (cx / 100)}" cy="${h * 0.52}" rx="${w * 0.17}" ry="${h * 0.27}" fill="#000" opacity=".28" filter="url(#blur)"/>
+  <ellipse cx="${w * (cx / 100)}" cy="${h * 0.52}" rx="${w * 0.17}" ry="${h * 0.27}" fill="#7a5c3a" opacity=".16" filter="url(#blur)"/>
   <rect width="100%" height="100%" filter="url(#grain)"/>
 </svg>`);
 }
 
 const media = [
-  ['hero/hero-bride.jpg', 2400, 1400],
+  ['hero/hero-bride.jpg', 1600, 2000],
   ['about/nam-portrait.jpg', 1200, 1500],
   ['about/working-detail.jpg', 1400, 1000],
   ['services/bridal-makeup.jpg', 1200, 1500],
@@ -84,14 +85,17 @@ const media = [
   ['gallery/bridal-look-06.jpg', 1600, 1100],
   ['gallery/bridal-look-07.jpg', 1400, 1400],
   ['gallery/bridal-look-08.jpg', 1200, 1600],
-  ['instagram/post-01.jpg', 1080, 1080],
-  ['instagram/post-02.jpg', 1080, 1080],
-  ['instagram/post-03.jpg', 1080, 1080],
-  ['instagram/post-04.jpg', 1080, 1080],
-  ['instagram/post-05.jpg', 1080, 1080],
-  ['instagram/post-06.jpg', 1080, 1080],
+  ['instagram/post-01.jpg', 1080, 1350],
+  ['instagram/post-02.jpg', 1080, 1350],
+  ['instagram/post-03.jpg', 1080, 1350],
+  ['instagram/post-04.jpg', 1080, 1350],
+  ['instagram/post-05.jpg', 1080, 1350],
+  ['instagram/post-06.jpg', 1080, 1350],
+  ['instagram/post-07.jpg', 1080, 1350],
+  ['instagram/post-08.jpg', 1080, 1350],
   ['blog/bridal-skincare-preparation.jpg', 1600, 1000],
   ['blog/wedding-morning-timings.jpg', 1600, 1000],
+  ['hero/hero-detail.jpg', 1200, 1500],
   ['cta/closing-enquiry.jpg', 2000, 1200],
 ];
 
@@ -109,8 +113,8 @@ console.log(`placeholder images created: ${made}`);
 const og = out('src/assets/media/social/og-default.jpg');
 if (!(await exists(og))) {
   await mkdir(path.dirname(og), { recursive: true });
-  const logoForOg = await sharp(logo).resize({ height: 420 }).toBuffer();
-  await sharp({ create: { width: 1200, height: 630, channels: 3, background: '#080808' } })
+  const logoForOg = await sharp(trimmed).resize({ height: 420 }).toBuffer();
+  await sharp({ create: { width: 1200, height: 630, channels: 3, background: IVORY } })
     .composite([{ input: logoForOg, gravity: 'centre' }])
     .jpeg({ quality: 88, mozjpeg: true }).toFile(og);
 }

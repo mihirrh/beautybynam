@@ -15,11 +15,11 @@ A calm morning is mostly a matter of order. Work backwards from the time you nee
 
 ## Start with the departure time
 
-Decide when you need to leave, then work back through photographs, getting dressed, hair and makeup. Share the plan with your photographer and artist.
+Decide when you need to leave, then work back through photographs, getting dressed, hair and makeup. Share the plan with your photographer and with us.
 
 ## Allow time for everyone
 
-If bridesmaids and family are having their hair or makeup done too, say so in your enquiry. Nam can then suggest an order that keeps everyone on schedule.
+If bridesmaids and family are having their hair or makeup done too, say so in your enquiry. we can then suggest an order that keeps everyone on schedule.
 
 ## Build in a buffer
 

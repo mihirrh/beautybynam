@@ -37,11 +37,11 @@ const coverUrl = new URL((await getImage({ src: cover, width: 1200, format: 'jpg
   schema={[blogPostingSchema(Astro.site!, { title: p.title, description: p.description, date: p.date, path, image: coverUrl, author: p.author })]}
 >
   <article>
-    <header class="wrap pb-12 pt-36 md:pb-16 md:pt-44">
+    <header class="wrap pb-16 pt-40 md:pb-24 md:pt-56">
       <Breadcrumbs trail={trail} />
-      <div class="mt-10 max-w-4xl" data-stagger>
+      <div class="mt-14 max-w-4xl" data-stagger>
         <p class="eyebrow" data-reveal>{p.category} · <time datetime={p.date.toISOString()}>{formatDate(p.date)}</time></p>
-        <h1 class="h1 mt-5" data-reveal>{p.title}</h1>
+        <h1 class="h1 mt-6" data-reveal>{p.title}</h1>
         <p class="lede mt-7" data-reveal>{p.description}</p>
         <p class="mt-6 text-sm text-muted" data-reveal>By {p.author}</p>
       </div>
@@ -51,8 +51,8 @@ const coverUrl = new URL((await getImage({ src: cover, width: 1200, format: 'jpg
       <Photo src={cover} alt={p.imageAlt} ratio="16 / 9" priority widths={[768, 1280, 1920]} sizes="(min-width: 1280px) 1280px, 100vw" />
     </div>
 
-    <div class="wrap-narrow pb-24 md:pb-32">
-      <div class="prose-lux !max-w-none text-[1.05rem]">
+    <div class="wrap-narrow pb-28 md:pb-40">
+      <div class="prose-lux drop !max-w-none text-[1.05rem]">
         <Content />
       </div>
       <div class="mt-16 border-t border-line pt-8">

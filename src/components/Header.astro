@@ -1,18 +1,21 @@
 ---
-import { settings } from '../lib/site';
+import { settings, cleanHref } from '../lib/site';
 
 interface Props {
   /** Hero pages let the photograph run under a transparent header. */
   overlay?: boolean;
 }
 const { overlay = false } = Astro.props;
-const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
-const isActive = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`));
+const path = cleanHref(Astro.url.pathname);
+const isActive = (href: string) => {
+  const target = cleanHref(href);
+  return target === '/' ? path === '/' : path === target || path.startsWith(`${target}/`);
+};
 ---
 
 <a
   href="#main"
-  class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-ink focus:px-4 focus:py-3 focus:text-champagne"
+  class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-ink focus:px-4 focus:py-3 focus:text-ivory"
 >
   Skip to content
 </a>
@@ -21,22 +24,22 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
   class:list={['site-header fixed inset-x-0 top-0 z-[60] transition-[background-color,border-color] duration-500', overlay ? 'is-overlay' : 'is-solid']}
   data-header
 >
-  <div class="wrap flex h-20 items-center justify-between gap-8">
-    <a href="/" class="group flex flex-col leading-none">
-      <span class="font-script text-[2rem] text-champagne">beauty by nam</span>
-      <span class="mt-1 text-[0.6rem] font-medium uppercase tracking-[0.34em] text-antique">{settings.tagline}</span>
+  <div class="wrap flex h-[5.5rem] items-center justify-between gap-8">
+    <a href="/" class="flex shrink-0 flex-col whitespace-nowrap leading-none" aria-label={`${settings.businessName}, home`}>
+      <span class="font-script text-[2.15rem] text-ink md:text-[2.4rem]">{settings.businessName.toLowerCase()}</span>
+      <span class="mt-1.5 text-[0.62rem] font-medium uppercase tracking-[0.34em] text-gold-deep">Hair · Makeup · Beauty</span>
     </a>
 
-    <nav aria-label="Primary" class="hidden items-center gap-9 lg:flex">
+    <nav aria-label="Primary" class="hidden items-center gap-11 xl:flex">
       {settings.nav.map((item) => (
-        <a href={item.href} class="nav-link" aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
+        <a href={cleanHref(item.href)} class="nav-link" aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
       ))}
       <a href="/contact" class="btn btn-primary !min-h-0 !px-6 !py-3">{settings.headerCta}</a>
     </nav>
 
     <button
       type="button"
-      class="relative -mr-2 flex h-11 w-11 items-center justify-center lg:hidden"
+      class="relative -mr-2 flex h-11 w-11 items-center justify-center xl:hidden"
       aria-expanded="false"
       aria-controls="mobile-menu"
       aria-label="Open menu"
@@ -44,8 +47,8 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
     >
       <span class="sr-only">Menu</span>
       <span class="relative block h-3.5 w-7" aria-hidden="true">
-        <span class="absolute left-0 top-0 h-px w-full bg-champagne transition-transform duration-500" data-bar="1"></span>
-        <span class="absolute bottom-0 left-0 h-px w-full bg-champagne transition-transform duration-500" data-bar="2"></span>
+        <span class="absolute left-0 top-0 h-px w-full bg-ink transition-transform duration-500" data-bar="1"></span>
+        <span class="absolute bottom-0 left-0 h-px w-full bg-ink transition-transform duration-500" data-bar="2"></span>
       </span>
     </button>
   </div>
@@ -53,7 +56,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
 
 <div
   id="mobile-menu"
-  class="fixed inset-0 z-[55] hidden bg-ink lg:hidden"
+  class="fixed inset-0 z-[55] hidden bg-ivory xl:hidden"
   role="dialog"
   aria-modal="true"
   aria-label="Menu"
@@ -64,11 +67,11 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
       {settings.nav.map((item, i) => (
         <li data-menu-item>
           <a
-            href={item.href}
-            class="block py-2 font-display text-[2.4rem] font-light leading-tight text-cream"
+            href={cleanHref(item.href)}
+            class="block py-2 font-display text-[2.4rem] font-light leading-tight text-ink"
             aria-current={isActive(item.href) ? 'page' : undefined}
           >
-            <span class="mr-4 text-xs tracking-[0.3em] text-antique">{String(i + 1).padStart(2, '0')}</span>{item.label}
+            <span class="mr-4 text-xs tracking-[0.3em] text-gold-deep">{String(i + 1).padStart(2, '0')}</span>{item.label}
           </a>
         </li>
       ))}
@@ -80,15 +83,17 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
 </div>
 
 <style>
+  .site-header {
+    background: transparent;
+    border-bottom: 1px solid transparent;
+  }
+  /* Over a photograph the header stays clear; the logo and links turn light-on-dark only
+     where the hero is dark. Our hero is bright and airy, so ink text stays legible. */
   .site-header.is-solid,
   .site-header.is-scrolled {
-    background: rgb(8 8 8 / 0.92);
-    border-bottom: 1px solid var(--color-line);
+    background: rgb(253 252 240 / 0.96);
+    border-bottom-color: var(--color-hair);
     backdrop-filter: blur(10px);
-  }
-  .site-header.is-overlay:not(.is-scrolled) {
-    background: linear-gradient(to bottom, rgb(8 8 8 / 0.65), transparent);
-    border-bottom: 1px solid transparent;
   }
   [data-menu-toggle][aria-expanded='true'] [data-bar='1'] {
     transform: translateY(6.5px) rotate(45deg);

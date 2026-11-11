@@ -10,24 +10,24 @@ Mobile uses Lighthouse's default mobile profile. Desktop uses `--preset=desktop`
 
 | Page | Device | Perf | A11y | Best Practices | SEO | LCP | CLS | TBT |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Home | Mobile | 100 | 100 | 100 | 100 | 1.8 s | 0 | 0 ms |
+| Home | Mobile | 99 | 100 | 100 | 100 | 1.9 s | 0 | 0 ms |
 | Home | Desktop | 100 | 100 | 100 | 100 | 0.5 s | 0.001 | 0 ms |
-| About | Mobile | 99 | 100 | 100 | 100 | 2.0 s | 0 | 0 ms |
-| About | Desktop | 100 | 100 | 100 | 100 | 0.4 s | 0.001 | 0 ms |
-| Portfolio | Mobile | 100 | 100 | 100 | 100 | 1.8 s | 0 | 0 ms |
-| Portfolio | Desktop | 100 | 100 | 100 | 100 | 0.4 s | 0.001 | 0 ms |
-| Service (Bridal Makeup) | Mobile | 100 | 100 | 100 | 100 | 1.8 s | 0 | 0 ms |
+| About | Mobile | 98 | 100 | 100 | 100 | 2.4 s | 0.019 | 0 ms |
+| About | Desktop | 100 | 100 | 100 | 100 | 0.5 s | 0.001 | 0 ms |
+| Services | Mobile | 98 | 100 | 100 | 100 | 2.3 s | 0 | 0 ms |
+| Services | Desktop | 100 | 100 | 100 | 100 | 0.4 s | 0.015 | 0 ms |
+| Service (Bridal Makeup) | Mobile | 98 | 100 | 100 | 100 | 2.3 s | 0 | 0 ms |
 | Service (Bridal Makeup) | Desktop | 100 | 100 | 100 | 100 | 0.4 s | 0.001 | 0 ms |
-| Contact | Mobile | 100 | 100 | 100 | 100 | 1.9 s | 0.015 | 0 ms |
-| Contact | Desktop | 100 | 100 | 100 | 100 | 0.4 s | 0.001 | 0 ms |
-| Blog article | Mobile | 100 | 100 | 100 | 100 | 1.7 s | 0.006 | 0 ms |
-| Blog article | Desktop | 100 | 100 | 100 | 100 | 0.4 s | 0.02 | 0 ms |
-| Terms | Mobile | 100 | 100 | 100 | 100 | 0.8 s | 0.008 | 0 ms |
-| Terms | Desktop | 100 | 100 | 100 | 100 | 0.4 s | 0.002 | 0 ms |
+| Portfolio | Mobile | 99 | 100 | 100 | 100 | 2.3 s | 0 | 0 ms |
+| Portfolio | Desktop | 100 | 100 | 100 | 100 | 0.5 s | 0.001 | 0 ms |
+| Contact | Mobile | 98 | 100 | 100 | 100 | 2.4 s | 0.013 | 0 ms |
+| Contact | Desktop | 100 | 100 | 100 | 100 | 0.4 s | 0.02 | 0 ms |
+| Blog index | Mobile | 98 | 100 | 100 | 100 | 2.5 s | 0 | 0 ms |
+| Blog index | Desktop | 100 | 100 | 100 | 100 | 0.4 s | 0.003 | 0 ms |
 
 Target was 95+ in every category: met on every page tested.
 
-Not audited with Lighthouse: `/testimonials`, `/services`, `/blog`, `/404` and `/studio/quote` (private). They share the same layout, CSS and scripts as the pages above.
+Not audited with Lighthouse: `/testimonials`, `/terms`, blog articles, `/404` and `/studio/quote` (private). They share the same layout, CSS and scripts as the pages above.
 
 ### Issues found and fixed during the audit
 
@@ -38,6 +38,7 @@ Not audited with Lighthouse: `/testimonials`, `/services`, `/blog`, `/404` and `
 | Mobile menu hid the logo and close button behind the full-screen panel, so touch users could not see how to close it. | Header now sits above the menu panel. Verified by tapping the toggle on an emulated phone. |
 | Vite warning about a dynamic and static import of the same logo. | Made the import static. |
 | Large-chunk warning (PDFKit and its font data, about 530 kB). | Only loaded by the private `/studio/quote` page, so public pages never fetch it (checked: no public page references that script). Warning limit raised with a comment explaining why. |
+| Home page layout shift of 0.27 to 0.42 (round 2 light redesign): the hero headline reflowed when the web fonts swapped in. | Preloaded the three font files used above the fold (Cormorant Garamond Light and Light Italic, DM Sans Light). CLS dropped to 0 to 0.001 and mobile Performance went from 84 to 98. |
 | Titles over 65 characters on the home page and Party & Occasion service. | Shortened. |
 
 ### A note on one misleading result
@@ -73,7 +74,7 @@ Bug found by these tests and fixed: the no-JavaScript confirmation relied on a s
 
 ### Quote PDF
 
-Sample quote: £250 + 3 x £65.50 + £180 + £45 travel = £671.50 subtotal, VAT £134.30, total £805.80, £100 deposit, balance £705.80. The generated PDF matched exactly. Page 1 has the logo, About text and thank-you message; page 2 has the itemised quote, totals and key terms.
+Sample quote: £250 + 3 x £65.50 + £180 + £45 travel = £671.50 subtotal, VAT £134.30, total £805.80, £100 deposit, balance £705.80. The generated PDF matched exactly. Page 1 has the transparent logo on ivory, the "A little about us" text and the thank-you message; page 2 has the itemised quote, totals and a line saying the full terms are on the website (no raw URL). The logo was confirmed to carry an alpha mask, so it is transparent in the PDF.
 
 ## Cloudflare Functions (run locally with `wrangler pages dev`, bound to 127.0.0.1)
 

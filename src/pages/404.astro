@@ -1,17 +1,28 @@
 ---
 import Base from '../layouts/Base.astro';
+import StaggeredList from '../components/StaggeredList.astro';
+import FadeIn from '../components/FadeIn.astro';
+import { em } from '../lib/text';
 ---
 
-<Base title="Page not found | Beauty by Nam" description="The page you were looking for could not be found." noindex>
-  <section class="wrap grid min-h-[70svh] place-items-center pb-24 pt-40 text-center">
-    <div class="max-w-xl">
-      <p class="eyebrow">404</p>
-      <h1 class="h1 mt-5">This page has wandered off</h1>
-      <p class="mt-6 text-muted">The link may be out of date. You can head back to the homepage or see recent work in the portfolio.</p>
-      <div class="mt-10 flex flex-col items-center justify-center gap-6 sm:flex-row">
-        <a href="/" class="btn btn-primary">Back to home</a>
-        <a href="/portfolio" class="link-quiet">View the portfolio<span class="arrow" aria-hidden="true"></span></a>
-      </div>
+<Base
+  title="Page not found | Beauty by Nam"
+  description="We can't seem to find the page you are looking for. Return to the homepage or explore our portfolio."
+  noindex
+>
+  <section class="relative isolate overflow-x-clip bg-ivory">
+    <div class="wrap relative grid min-h-[88svh] place-items-center pb-28 pt-44 text-center">
+      <StaggeredList class="max-w-3xl">
+        <FadeIn as="p" class="eyebrow">Error 404</FadeIn>
+        <h1 class="h1 mt-8 !text-[clamp(2.4rem,5vw,4.4rem)]" data-reveal set:html={em("We can't seem to find *the page* you are looking for")} />
+        <FadeIn as="p" class="lede mx-auto mt-8">
+          The link may be out of date, or the page may have moved. Please head back to the homepage, or take a look at our latest work.
+        </FadeIn>
+        <FadeIn class="mt-12 flex flex-col items-center justify-center gap-6 sm:flex-row sm:gap-10">
+          <a href="/" class="btn btn-primary">Return to the Homepage<span class="arrow" aria-hidden="true"></span></a>
+          <a href="/portfolio" class="link-quiet">Explore Our Portfolio<span class="arrow" aria-hidden="true"></span></a>
+        </FadeIn>
+      </StaggeredList>
     </div>
   </section>
 </Base>

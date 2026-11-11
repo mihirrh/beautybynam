@@ -17,6 +17,8 @@ interface Props {
   reveal?: boolean;
   keyline?: boolean;
   zoom?: boolean;
+  /** Very slight parallax drift of the picture inside its frame while scrolling. */
+  drift?: boolean;
   position?: string;
 }
 
@@ -31,6 +33,7 @@ const {
   reveal = true,
   keyline = false,
   zoom = false,
+  drift = false,
   position = 'center',
 } = Astro.props;
 
@@ -43,6 +46,7 @@ const classes = ['photo', keyline && 'photo-keyline', zoom && 'photo-zoom', clas
   class={classes}
   style={ratio ? `aspect-ratio:${ratio}` : undefined}
   data-reveal-img={reveal && !priority ? '' : undefined}
+  data-drift={drift ? '' : undefined}
 >
   <Picture
     src={src}
